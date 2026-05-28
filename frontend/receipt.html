@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+Receipt
+</title>
+
+<link rel="stylesheet"
+href="receipt.css">
+
+</head>
+
+<body>
+
+<div class="receipt-card">
+
+<h1>
+BLACK BRIDGE TECHNOLOGIES
+</h1>
+
+<h2>
+PAYMENT RECEIPT
+</h2>
+
+<hr>
+
+<p>
+Customer:
+<span id="customerName"></span>
+</p>
+
+<p>
+Phone:
+<span id="customerPhone"></span>
+</p>
+
+<p>
+Date:
+<span id="date"></span>
+</p>
+
+<p>
+Time:
+<span id="time"></span>
+</p>
+
+<p>
+Barcode:
+<span id="barcode"></span>
+</p>
+
+<hr>
+
+<h3>
+Products
+</h3>
+
+<div id="productsList">
+
+</div>
+
+<hr>
+
+<p>
+Discount:
+₦<span id="discount"></span>
+</p>
+
+<h2>
+Total:
+₦<span id="total"></span>
+</h2>
+
+<button onclick="window.print()">
+Print Receipt
+</button>
+
+<button onclick="sendWhatsAppReceipt()">
+WhatsApp Receipt
+</button>
+
+</div>
+
+<script src="receipt.js"></script>
+
+</body>
+
+</html>

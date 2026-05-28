@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>
+Staff Details
+</title>
+
+<link rel="stylesheet"
+href="style.css">
+<link rel="stylesheet" href="animation.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>
+Staff Profile
+</h1>
+
+
+
+<!-- NAVIGATION -->
+<div class="top-buttons">
+
+<button onclick="goDashboard()">
+Dashboard
+</button>
+
+<button onclick="logout()">
+Logout
+</button>
+
+</div>
+
+
+
+
+<!-- STAFF INFO -->
+<div id="staffInfo"
+class="product">
+
+</div>
+
+
+
+
+<!-- ADD PRODUCT -->
+<div class="product">
+
+<h2>
+Add Product To Staff
+</h2>
+
+
+<input
+id="name"
+placeholder="Product Name">
+
+
+<input
+id="sellingPrice"
+placeholder="Selling Price">
+
+
+<input
+id="costPrice"
+placeholder="Cost Price">
+
+
+<input
+id="quantity"
+placeholder="Quantity">
+
+
+<input
+id="barcode"
+placeholder="Barcode">
+
+
+
+<input
+type="file"
+id="image">
+
+
+
+<h3 id="totalPrice">
+Total Price: ₦0
+</h3>
+
+
+
+<button onclick="addProduct()">
+
+Add Product
+
+</button>
+
+</div>
+
+
+
+
+<!-- STAFF PRODUCTS -->
+<h2>
+Staff Products
+</h2>
+
+<div id="productList"
+class="products">
+
+</div>
+
+
+
+
+<!-- STAFF SALES -->
+<h2>
+Staff Sales History
+</h2>
+
+<div id="salesHistory"
+class="products">
+
+</div>
+
+</div>
+
+<script src="staff-details.js"></script>
+
+</body>
+</html>

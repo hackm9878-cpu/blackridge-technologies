@@ -1,0 +1,330 @@
+/* =========================
+GLOBAL ANIMATIONS
+========================= */
+
+body{
+
+animation:fadeBody 1s ease;
+
+background:#050816;
+
+}
+
+
+@keyframes fadeBody{
+
+from{
+opacity:0;
+}
+
+to{
+opacity:1;
+}
+
+}
+
+
+
+/* =========================
+NAVBAR
+========================= */
+
+.navbar{
+
+animation:slideDown 1s ease;
+
+box-shadow:
+0 0 20px #00e1ff33;
+
+}
+
+
+@keyframes slideDown{
+
+from{
+
+transform:translateY(-100px);
+opacity:0;
+
+}
+
+to{
+
+transform:translateY(0);
+opacity:1;
+
+}
+
+}
+
+
+
+/* =========================
+PRODUCT CARDS
+========================= */
+
+.product{
+
+transition:0.4s;
+
+animation:fadeUp 1s ease;
+
+background:rgba(255,255,255,0.05);
+
+backdrop-filter:blur(10px);
+
+border:1px solid #00e1ff22;
+
+box-shadow:
+0 0 20px #00e1ff11;
+
+}
+
+
+.product:hover{
+
+transform:
+translateY(-8px)
+scale(1.02);
+
+box-shadow:
+0 0 30px #00e1ff55;
+
+}
+
+
+
+@keyframes fadeUp{
+
+from{
+
+opacity:0;
+transform:translateY(40px);
+
+}
+
+to{
+
+opacity:1;
+transform:translateY(0);
+
+}
+
+}
+
+
+
+/* =========================
+BUTTONS
+========================= */
+
+button{
+
+transition:0.3s;
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+
+button:hover{
+
+transform:
+scale(1.05);
+
+box-shadow:
+0 0 20px #00e1ff99;
+
+}
+
+
+
+button::before{
+
+content:"";
+
+position:absolute;
+
+top:0;
+left:-100%;
+
+width:100%;
+height:100%;
+
+background:
+linear-gradient(
+90deg,
+transparent,
+rgba(255,255,255,0.5),
+transparent
+);
+
+transition:0.5s;
+
+}
+
+
+button:hover::before{
+
+left:100%;
+
+}
+
+
+
+/* =========================
+INPUTS
+========================= */
+
+input{
+
+transition:0.3s;
+
+}
+
+
+input:focus{
+
+transform:scale(1.02);
+
+box-shadow:
+0 0 15px #00e1ff55;
+
+}
+
+
+
+/* =========================
+HEADINGS
+========================= */
+
+h1,h2,h3{
+
+animation:glowText 3s infinite alternate;
+
+}
+
+
+@keyframes glowText{
+
+from{
+
+text-shadow:
+0 0 5px #00e1ff33;
+
+}
+
+to{
+
+text-shadow:
+0 0 20px #00e1ff99;
+
+}
+
+}
+
+
+
+/* =========================
+CHART CONTAINER
+========================= */
+
+canvas{
+
+animation:zoomIn 1s ease;
+
+}
+
+
+@keyframes zoomIn{
+
+from{
+
+transform:scale(0.8);
+opacity:0;
+
+}
+
+to{
+
+transform:scale(1);
+opacity:1;
+
+}
+
+}
+
+
+
+/* =========================
+TABLES / LISTS
+========================= */
+
+table,
+.history-item{
+
+animation:fadeUp 1s ease;
+
+}
+
+
+
+/* =========================
+FLOATING EFFECT
+========================= */
+
+.float{
+
+animation:float 6s ease-in-out infinite;
+
+}
+
+
+@keyframes float{
+
+0%{
+transform:translateY(0px);
+}
+
+50%{
+transform:translateY(-10px);
+}
+
+100%{
+transform:translateY(0px);
+}
+
+}
+
+
+
+/* =========================
+PAGE TRANSITION
+========================= */
+
+.container{
+
+animation:pageOpen 1s ease;
+
+}
+
+
+@keyframes pageOpen{
+
+from{
+
+opacity:0;
+transform:scale(0.95);
+
+}
+
+to{
+
+opacity:1;
+transform:scale(1);
+
+}
+
+}

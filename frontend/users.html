@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Users</title>
+
+<link rel="stylesheet"
+href="style.css">
+<link rel="stylesheet" href="animation.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>User Management</h1>
+
+<input
+type="text"
+id="username"
+placeholder="Username">
+
+<input
+type="password"
+id="password"
+placeholder="Password">
+
+<select id="role">
+
+<option value="staff">
+Staff
+</option>
+
+<option value="admin">
+Admin
+</option>
+
+</select>
+
+<button onclick="addUser()">
+Add User
+</button>
+
+<div id="users"></div>
+
+</div>
+
+<script src="users.js"></script>
+
+</body>
+</html>
