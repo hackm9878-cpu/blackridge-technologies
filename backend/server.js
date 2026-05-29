@@ -28,24 +28,20 @@ app.use(
 // =====================================
 
 mongoose.connect(
-    "mongodb://127.0.0.1:27017/blackridge"
+"mongodb+srv://hackm9878_db_user:cjs8tLlvBr79UYkg@blackridge.vmwgivt.mongodb.net/blackridge?retryWrites=true&w=majority"
 )
+.then(()=>{
 
-.then(() => {
-
-    console.log(
-        "MongoDB Connected"
-    );
+console.log(
+"MongoDB Atlas Connected"
+);
 
 })
+.catch((err)=>{
 
-.catch((err) => {
-
-    console.log(err);
+console.log(err);
 
 });
-
-
 
 // =====================================
 // MULTER STORAGE
