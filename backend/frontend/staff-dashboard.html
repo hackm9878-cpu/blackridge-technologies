@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>
+Staff Dashboard
+</title>
+
+<link rel="stylesheet"
+href="style.css">
+<link rel="stylesheet" href="animation.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>
+Black Ridge Technologies
+</h1>
+
+
+
+<!-- NAVIGATION -->
+<div class="top-buttons">
+
+<button onclick="goDashboard()">
+Dashboard
+</button>
+
+<button onclick="goSettings()">
+Settings
+</button>
+
+<button onclick="logout()">
+Logout
+</button>
+
+</div>
+
+
+
+
+<!-- STAFF STATS -->
+<div id="stats"
+class="products">
+
+</div>
+
+
+
+
+<!-- ANALYTICS -->
+<div class="product">
+
+<h2>
+My Business Analytics
+</h2>
+
+<canvas id="salesChart"></canvas>
+
+</div>
+
+
+
+
+<!-- SEARCH -->
+<input
+type="text"
+id="search"
+placeholder="Search Product"
+onkeyup="searchProducts()">
+
+
+
+
+<!-- PRODUCT LIST -->
+<h2>
+My Products
+</h2>
+
+<div id="productList"
+class="products">
+
+</div>
+
+
+
+
+
+<!-- CART -->
+<h2>
+Customer Cart
+</h2>
+
+<div
+id="cartItems"
+class="products">
+
+</div>
+
+
+
+<div class="product">
+
+<input
+id="customerName"
+placeholder="Customer Name">
+
+
+<input
+id="customerPhone"
+placeholder="Customer Phone">
+
+
+<input
+id="discount"
+placeholder="Discount">
+
+
+<input
+id="amountPaid"
+placeholder="Amount Paid">
+
+
+<h2 id="cartTotal">
+Total: ₦0
+</h2>
+
+
+<h2 id="balance">
+Balance: ₦0
+</h2>
+
+
+
+<button onclick="checkout()">
+
+Checkout
+
+</button>
+
+</div>
+
+
+
+
+<!-- CHECKOUT -->
+<div class="product">
+
+<input
+id="customerName"
+placeholder="Customer Name">
+
+
+<input
+id="customerPhone"
+placeholder="Customer Phone">
+
+
+<input
+id="amountPaid"
+placeholder="Amount Paid">
+
+
+<input
+id="discount"
+placeholder="Discount">
+
+
+
+<h2 id="cartTotal">
+Total: ₦0
+</h2>
+
+
+
+<button onclick="checkout()">
+
+Checkout
+
+</button>
+
+</div>
+
+
+
+
+<!-- SALES HISTORY -->
+<h2>
+My Sales History
+</h2>
+<input
+type="text"
+id="staffReceiptSearch"
+placeholder="Search My Receipts"
+onkeyup="searchMyReceipts()">
+
+<div id="salesHistory"
+class="products">
+
+</div>
+
+</div>
+
+<script src="staff-dashboard.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>
+Black Ridge Technologies
+</title>
+
+<link rel="stylesheet"
+href="style.css">
+<link rel="stylesheet" href="animation.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>
+Black Ridge Technologies Admin Dashboard
+</h1>
+
+
+
+<!-- NAVIGATION -->
+<div class="top-buttons">
+
+<button onclick="toggleNotifications()">
+Notifications
+</button>
+
+<button onclick="goDashboard()">
+Dashboard
+</button>
+
+<button onclick="goCustomers()">
+Customers
+</button>
+
+<button onclick="goSettings()">
+Settings
+</button>
+
+
+
+<button onclick="logout()">
+Logout
+</button>
+
+</div>
+
+<div
+id="notifications"
+class="products"
+style="display:none;">
+
+</div>
+
+
+<!-- COMPANY STATS -->
+<div id="stats"
+class="products">
+
+</div>
+
+
+
+
+<!-- BUSINESS ANALYTICS -->
+<div class="product">
+
+<h2>
+Business Analytics
+</h2>
+
+<div class="product">
+
+<h2>
+Daily Business Report
+</h2>
+
+<p id="dailyReport">
+Loading...
+</p>
+
+</div>
+
+<canvas
+id="salesChart"
+height="120">
+</canvas>
+
+
+
+<div id="topProducts"
+class="products">
+
+</div>
+
+
+
+<div id="topStaff"
+class="products">
+
+</div>
+
+
+
+
+<!-- STAFF MANAGEMENT -->
+<div class="product">
+
+<h2>
+Manage Staff
+</h2>
+
+
+
+<input
+id="staffName"
+placeholder="Name">
+
+
+<input
+id="staffUsername"
+placeholder="Username">
+
+
+<input
+id="staffPassword"
+placeholder="Password">
+
+
+<input
+id="staffState"
+placeholder="State">
+
+
+
+<button onclick="addStaff()">
+
+Add Staff
+
+</button>
+
+</div>
+
+
+
+
+<!-- STAFF LIST -->
+<h2>
+Staff List
+</h2>
+
+<div id="staffList"
+class="products">
+
+</div>
+
+
+
+
+<!-- COMPANY SALES -->
+<h2>
+Company Sales History
+</h2>
+
+<input
+type="text"
+id="receiptSearch"
+placeholder="Search Receipts"
+onkeyup="searchReceipts()">
+
+<div id="salesHistory"
+class="products">
+
+</div>
+
+</div>
+
+<script src="dashboard.js"></script>
+
+</body>
+</html>
