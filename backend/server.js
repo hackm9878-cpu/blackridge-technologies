@@ -27,13 +27,11 @@ app.use(
 // MONGODB
 // =====================================
 
-mongoose.connect(
-"mongodb+srv://hackm9878_db_user:cjs8tLlvBr79UYkg@blackridge.vmwgivt.mongodb.net/blackridge?retryWrites=true&w=majority"
-)
+mongoose.connect(process.env.MONGO_URI)
 .then(()=>{
 
 console.log(
-"MongoDB Atlas Connected"
+"MongoDB Connected"
 );
 
 })
