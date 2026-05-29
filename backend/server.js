@@ -13,13 +13,47 @@ const Notification = require("./models/Notification");
 
 const app = express();
 
+
+
+// =====================================
+// MIDDLEWARE
+// =====================================
+
 app.use(cors());
+
 app.use(express.json());
 
 app.use(
     "/uploads",
-    express.static("uploads")
+    express.static(
+        path.join(__dirname, "uploads")
+    )
 );
+
+
+
+// =====================================
+// FRONTEND
+// =====================================
+
+app.use(
+    express.static(
+        path.join(__dirname, "../frontend")
+    )
+);
+
+app.get("/", (req,res)=>{
+
+    res.sendFile(
+
+        path.join(
+            __dirname,
+            "../frontend/index.html"
+        )
+
+    );
+
+});
 
 
 
@@ -28,25 +62,28 @@ app.use(
 // =====================================
 
 mongoose.connect(process.env.MONGO_URI)
+
 .then(()=>{
 
-console.log(
-"MongoDB Connected"
-);
+    console.log(
+        "MongoDB Connected"
+    );
 
 })
+
 .catch((err)=>{
 
-console.log(err);
+    console.log(err);
 
 });
+
+
 
 // =====================================
 // MULTER STORAGE
 // =====================================
 
-const storage =
-multer.diskStorage({
+const storage = multer.diskStorage({
 
     destination:(req,file,cb)=>{
 
@@ -61,9 +98,7 @@ multer.diskStorage({
             null,
 
             Date.now() +
-            path.extname(
-                file.originalname
-            )
+            path.extname(file.originalname)
 
         );
 
@@ -71,10 +106,7 @@ multer.diskStorage({
 
 });
 
-
-
-const upload =
-multer({
+const upload = multer({
     storage
 });
 
@@ -84,64 +116,60 @@ multer({
 // CREATE ADMIN
 // =====================================
 
-app.get(
-    "/create-admin",
-    async(req,res)=>{
+app.get("/create-admin", async(req,res)=>{
 
-        try{
+    try{
 
-            const admin =
-            await User.findOne({
+        const admin =
+        await User.findOne({
+            username:"admin"
+        });
 
-                username:"admin"
+        if(admin){
 
-            });
-
-            if(admin){
-
-                return res.json({
-
-                    message:
-                    "Admin Already Exists"
-
-                });
-
-            }
-
-            const newAdmin =
-            new User({
-
-                name:"Black Ridge Admin",
-
-                username:"admin",
-
-                password:"admin123",
-
-                role:"admin"
-
-            });
-
-            await newAdmin.save();
-
-            res.json({
+            return res.json({
 
                 message:
-                "Admin Created"
-
-            });
-
-        }catch(error){
-
-            console.log(error);
-
-            res.status(500).json({
-
-                message:
-                "Server Error"
+                "Admin Already Exists"
 
             });
 
         }
+
+        const newAdmin =
+        new User({
+
+            name:"Black Ridge Admin",
+
+            username:"admin",
+
+            password:"admin123",
+
+            role:"admin"
+
+        });
+
+        await newAdmin.save();
+
+        res.json({
+
+            message:
+            "Admin Created"
+
+        });
+
+    }catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            message:
+            "Server Error"
+
+        });
+
+    }
 
 });
 
@@ -151,100 +179,92 @@ app.get(
 // LOGIN
 // =====================================
 
-app.post(
-    "/login",
-    async(req,res)=>{
+app.post("/login", async(req,res)=>{
 
-        try{
+    try{
 
-            const {
-                username,
-                password
-            } = req.body;
+        const {
+            username,
+            password
+        } = req.body;
 
 
 
-            // ADMIN
-            let user =
-            await User.findOne({
-                username
-            });
+        // ADMIN
+        let user =
+        await User.findOne({
+            username
+        });
 
+        if(user){
 
+            if(user.password !== password){
 
-            if(user){
+                return res.status(400).json({
 
-                if(user.password !== password){
-
-                    return res.status(400).json({
-
-                        message:
-                        "Wrong Password"
-
-                    });
-
-                }
-
-                return res.json({
-
-                    user
+                    message:
+                    "Wrong Password"
 
                 });
 
             }
 
+            return res.json({
 
-
-            // STAFF
-            let staff =
-            await Staff.findOne({
-                username
-            });
-
-
-
-            if(staff){
-
-                if(staff.password !== password){
-
-                    return res.status(400).json({
-
-                        message:
-                        "Wrong Password"
-
-                    });
-
-                }
-
-                return res.json({
-
-                    user:staff
-
-                });
-
-            }
-
-
-
-            res.status(404).json({
-
-                message:
-                "User Not Found"
-
-            });
-
-        }catch(error){
-
-            console.log(error);
-
-            res.status(500).json({
-
-                message:
-                "Server Error"
+                user
 
             });
 
         }
+
+
+
+        // STAFF
+        let staff =
+        await Staff.findOne({
+            username
+        });
+
+        if(staff){
+
+            if(staff.password !== password){
+
+                return res.status(400).json({
+
+                    message:
+                    "Wrong Password"
+
+                });
+
+            }
+
+            return res.json({
+
+                user:staff
+
+            });
+
+        }
+
+        res.status(404).json({
+
+            message:
+            "User Not Found"
+
+        });
+
+    }catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            message:
+            "Server Error"
+
+        });
+
+    }
 
 });
 
@@ -254,76 +274,64 @@ app.post(
 // ADD STAFF
 // =====================================
 
-app.post(
-    "/add-staff",
-    async(req,res)=>{
+app.post("/add-staff", async(req,res)=>{
 
-        try{
+    try{
 
-            const {
-                name,
-                username,
-                password,
-                state
-            } = req.body;
+        const {
+            name,
+            username,
+            password,
+            state
+        } = req.body;
 
+        const exists =
+        await Staff.findOne({
+            username
+        });
 
+        if(exists){
 
-            const exists =
-            await Staff.findOne({
-                username
-            });
-
-
-
-            if(exists){
-
-                return res.status(400).json({
-
-                    message:
-                    "Username Already Exists"
-
-                });
-
-            }
-
-
-
-            const staff =
-            new Staff({
-
-                name,
-                username,
-                password,
-                state
-
-            });
-
-
-
-            await staff.save();
-
-
-
-            res.json({
+            return res.status(400).json({
 
                 message:
-                "Staff Added"
-
-            });
-
-        }catch(error){
-
-            console.log(error);
-
-            res.status(500).json({
-
-                message:
-                "Server Error"
+                "Username Already Exists"
 
             });
 
         }
+
+        const staff =
+        new Staff({
+
+            name,
+            username,
+            password,
+            state
+
+        });
+
+        await staff.save();
+
+        res.json({
+
+            message:
+            "Staff Added"
+
+        });
+
+    }catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            message:
+            "Server Error"
+
+        });
+
+    }
 
 });
 
@@ -333,29 +341,27 @@ app.post(
 // GET STAFF
 // =====================================
 
-app.get(
-    "/staff",
-    async(req,res)=>{
+app.get("/staff", async(req,res)=>{
 
-        try{
+    try{
 
-            const staff =
-            await Staff.find();
+        const staff =
+        await Staff.find();
 
-            res.json(staff);
+        res.json(staff);
 
-        }catch(error){
+    }catch(error){
 
-            console.log(error);
+        console.log(error);
 
-            res.status(500).json({
+        res.status(500).json({
 
-                message:
-                "Server Error"
+            message:
+            "Server Error"
 
-            });
+        });
 
-        }
+    }
 
 });
 
@@ -365,138 +371,126 @@ app.get(
 // DELETE STAFF
 // =====================================
 
-app.delete(
-    "/delete-staff/:id",
-    async(req,res)=>{
+app.delete("/delete-staff/:id", async(req,res)=>{
 
-        try{
+    try{
 
-            await Staff.findByIdAndDelete(
-                req.params.id
-            );
+        await Staff.findByIdAndDelete(
+            req.params.id
+        );
 
-            res.json({
+        res.json({
 
-                message:
-                "Staff Deleted"
+            message:
+            "Staff Deleted"
 
-            });
+        });
 
-        }catch(error){
+    }catch(error){
 
-            console.log(error);
+        console.log(error);
 
-            res.status(500).json({
+        res.status(500).json({
 
-                message:
-                "Server Error"
+            message:
+            "Server Error"
 
-            });
+        });
 
-        }
+    }
 
 });
 
 
 
 // =====================================
-// ADD PRODUCT TO STAFF
+// ASSIGN PRODUCT
 // =====================================
 
 app.post(
-    "/assign-product",
-    upload.single("image"),
-    async(req,res)=>{
+"/assign-product",
+upload.single("image"),
+async(req,res)=>{
 
-        try{
+    try{
 
-            const {
+        const {
 
-                staffId,
-                productName,
-                sellingPrice,
-                costPrice,
-                quantity,
-                barcode
+            staffId,
+            productName,
+            sellingPrice,
+            costPrice,
+            quantity,
+            barcode
 
-            } = req.body;
-
-
-
-            const totalPrice =
-
-            Number(costPrice) *
-            Number(quantity);
+        } = req.body;
 
 
 
-            const product =
-            new Product({
+        const totalPrice =
 
-                productName,
-
-                sellingPrice,
-
-                costPrice,
-
-                quantity,
-
-                barcode,
-
-                totalPrice,
-
-                staffId,
-
-                image:req.file
-                ? req.file.filename
-                : ""
-
-            });
+        Number(costPrice) *
+        Number(quantity);
 
 
 
-            await product.save();
+        const product =
+        new Product({
+
+            productName,
+
+            sellingPrice,
+
+            costPrice,
+
+            quantity,
+
+            barcode,
+
+            totalPrice,
+
+            staffId,
+
+            image:req.file
+            ? req.file.filename
+            : ""
+
+        });
+
+        await product.save();
 
 
 
-            const staff =
-            await Staff.findById(
-                staffId
-            );
+        const staff =
+        await Staff.findById(staffId);
 
+        if(staff){
 
+            staff.products.push(product._id);
 
-            if(staff){
-
-                staff.products.push(
-                    product._id
-                );
-
-                await staff.save();
-
-            }
-
-
-
-            res.json({
-
-                message:
-                "Product Assigned"
-
-            });
-
-        }catch(error){
-
-            console.log(error);
-
-            res.status(500).json({
-
-                message:
-                "Server Error"
-
-            });
+            await staff.save();
 
         }
+
+        res.json({
+
+            message:
+            "Product Assigned"
+
+        });
+
+    }catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            message:
+            "Server Error"
+
+        });
+
+    }
 
 });
 
@@ -506,33 +500,31 @@ app.post(
 // STAFF PRODUCTS
 // =====================================
 
-app.get(
-    "/staff-products/:id",
-    async(req,res)=>{
+app.get("/staff-products/:id", async(req,res)=>{
 
-        try{
+    try{
 
-            const products =
-            await Product.find({
+        const products =
+        await Product.find({
 
-                staffId:req.params.id
+            staffId:req.params.id
 
-            });
+        });
 
-            res.json(products);
+        res.json(products);
 
-        }catch(error){
+    }catch(error){
 
-            console.log(error);
+        console.log(error);
 
-            res.status(500).json({
+        res.status(500).json({
 
-                message:
-                "Server Error"
+            message:
+            "Server Error"
 
-            });
+        });
 
-        }
+    }
 
 });
 
@@ -542,168 +534,141 @@ app.get(
 // CHECKOUT
 // =====================================
 
-app.post(
-    "/checkout",
-    async(req,res)=>{
+app.post("/checkout", async(req,res)=>{
 
-        try{
+    try{
 
-            const {
+        const {
 
-                cart,
+            cart,
+            customerName,
+            customerPhone,
+            amountPaid,
+            discount,
+            staffId,
+            staffName
+
+        } = req.body;
+
+
+
+        let total = 0;
+
+        for(let item of cart){
+
+            total +=
+            Number(item.sellingPrice) *
+            Number(item.qty);
+
+        }
+
+        total -= Number(discount || 0);
+
+        const balance =
+        Number(amountPaid || 0) - total;
+
+
+
+        for(let item of cart){
+
+            const sale =
+            new Sale({
+
                 customerName,
+
                 customerPhone,
+
+                productName:
+                item.productName,
+
+                barcode:
+                item.barcode,
+
+                quantity:
+                item.qty,
+
+                sellingPrice:
+                item.sellingPrice,
+
                 amountPaid,
+
                 discount,
-                staffId,
-                staffName
 
-            } = req.body;
-
-
-
-            let total = 0;
-
-
-
-            for(let item of cart){
-
-                total +=
-                item.sellingPrice *
-                item.qty;
-
-            }
-
-
-
-            // DISCOUNT
-            total -= Number(discount || 0);
-
-
-
-            // BALANCE
-            const balance =
-            Number(amountPaid || 0) - total;
-
-
-
-            // SAVE SALES
-            for(let item of cart){
-
-                const sale =
-                new Sale({
-
-                    customerName,
-
-                    customerPhone,
-
-                    productName:
-                    item.productName,
-
-                    barcode:
-                    item.barcode,
-
-                    quantity:
-                    item.qty,
-
-                    sellingPrice:
-                    item.sellingPrice,
-
-                    amountPaid,
-
-                    discount,
-
-                    total,
-
-                    balance,
-
-                    staffId,
-
-                    staffName,
-
-                    receiptNumber:
-                    "BR-" + Date.now()
-
-                });
-
-
-
-                await sale.save();
-
-
-
-                // REDUCE STOCK
-                const product =
-                await Product.findById(
-                    item._id
-                );
-
-
-
-                if(product){
-
-                    product.quantity -=
-                    item.qty;
-
-                    await product.save();
-
-                }
-
-            }
-
-
-
-            // SAVE CUSTOMER
-            const customer =
-            new Customer({
-
-                name:
-                customerName,
-
-                phone:
-                customerPhone,
-
-                totalBought:
                 total,
-
-                amountPaid,
 
                 balance,
 
+                staffId,
+
                 staffName,
 
-                paymentStatus:
-                balance >= 0
-                ? "Paid"
-                : "Not Complete"
+                receiptNumber:
+                "BR-" + Date.now()
 
             });
 
-
-
-            await customer.save();
+            await sale.save();
 
 
 
-            res.json({
+            const product =
+            await Product.findById(item._id);
 
-                message:
-                "Checkout Successful"
+            if(product){
 
-            });
+                product.quantity -= item.qty;
 
-        }catch(error){
+                await product.save();
 
-            console.log(error);
-
-            res.status(500).json({
-
-                message:
-                "Server Error"
-
-            });
+            }
 
         }
+
+
+
+        const customer =
+        new Customer({
+
+            name:customerName,
+
+            phone:customerPhone,
+
+            totalBought:total,
+
+            amountPaid,
+
+            balance,
+
+            staffName,
+
+            paymentStatus:
+            balance >= 0
+            ? "Paid"
+            : "Not Complete"
+
+        });
+
+        await customer.save();
+
+        res.json({
+
+            message:
+            "Checkout Successful"
+
+        });
+
+    }catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            message:
+            "Server Error"
+
+        });
+
+    }
 
 });
 
@@ -713,71 +678,69 @@ app.post(
 // SALES HISTORY
 // =====================================
 
-app.get(
-    "/sales-history/:id",
-    async(req,res)=>{
+app.get("/sales-history/:id", async(req,res)=>{
 
-        try{
+    try{
 
-            const sales =
-            await Sale.find({
+        const sales =
+        await Sale.find({
 
-                staffId:req.params.id
+            staffId:req.params.id
 
-            }).sort({
+        }).sort({
 
-                createdAt:-1
+            createdAt:-1
 
-            });
+        });
 
-            res.json(sales);
+        res.json(sales);
 
-        }catch(error){
+    }catch(error){
 
-            console.log(error);
+        console.log(error);
 
-            res.status(500).json({
+        res.status(500).json({
 
-                message:
-                "Server Error"
+            message:
+            "Server Error"
 
-            });
+        });
 
-        }
+    }
 
 });
 
 
 
 // =====================================
-// COMPANY SALES
+// ALL SALES
 // =====================================
 
-app.get(
-    "/all-sales",
-    async(req,res)=>{
+app.get("/all-sales", async(req,res)=>{
 
-        try{
+    try{
 
-            const sales =
-            await Sale.find().sort({
-                createdAt:-1
-            });
+        const sales =
+        await Sale.find().sort({
 
-            res.json(sales);
+            createdAt:-1
 
-        }catch(error){
+        });
 
-            console.log(error);
+        res.json(sales);
 
-            res.status(500).json({
+    }catch(error){
 
-                message:
-                "Server Error"
+        console.log(error);
 
-            });
+        res.status(500).json({
 
-        }
+            message:
+            "Server Error"
+
+        });
+
+    }
 
 });
 
@@ -787,124 +750,31 @@ app.get(
 // CUSTOMERS
 // =====================================
 
-app.get(
-    "/customers",
-    async(req,res)=>{
+app.get("/customers", async(req,res)=>{
 
-        try{
+    try{
 
-            const customers =
-            await Customer.find().sort({
-                createdAt:-1
-            });
+        const customers =
+        await Customer.find().sort({
 
-            res.json(customers);
+            createdAt:-1
 
-        }catch(error){
+        });
 
-            console.log(error);
+        res.json(customers);
 
-            res.status(500).json({
+    }catch(error){
 
-                message:
-                "Server Error"
+        console.log(error);
 
-            });
+        res.status(500).json({
 
-        }
+            message:
+            "Server Error"
 
-});
+        });
 
-
-
-// =====================================
-// UPDATE SETTINGS
-// =====================================
-
-app.post(
-    "/update-settings",
-    async(req,res)=>{
-
-        try{
-
-            const {
-                id,
-                role,
-                name,
-                username,
-                password
-            } = req.body;
-
-
-
-            if(role === "staff"){
-
-                const oldStaff =
-                await Staff.findById(id);
-
-
-
-                const notification =
-                new Notification({
-
-                    message:
-                    `${oldStaff.name} changed account info`
-
-                });
-
-
-
-                await notification.save();
-
-
-
-                await Staff.findByIdAndUpdate(
-                    id,
-                    {
-                        name,
-                        username,
-                        password
-                    }
-                );
-
-            }
-
-
-
-            if(role === "admin"){
-
-                await User.findByIdAndUpdate(
-                    id,
-                    {
-                        name,
-                        username,
-                        password
-                    }
-                );
-
-            }
-
-
-
-            res.json({
-
-                message:
-                "Updated"
-
-            });
-
-        }catch(error){
-
-            console.log(error);
-
-            res.status(500).json({
-
-                message:
-                "Server Error"
-
-            });
-
-        }
+    }
 
 });
 
@@ -914,148 +784,106 @@ app.post(
 // DAILY REPORT
 // =====================================
 
-app.get(
-    "/daily-report",
-    async(req,res)=>{
+app.get("/daily-report", async(req,res)=>{
 
-        try{
+    try{
 
-            const sales =
-            await Sale.find();
+        const sales =
+        await Sale.find();
 
-            const products =
-            await Product.find();
+        const products =
+        await Product.find();
 
-            const staff =
-            await Staff.find();
+        const staff =
+        await Staff.find();
 
 
 
-            let totalSales = 0;
+        let totalSales = 0;
 
-            sales.forEach(s=>{
+        sales.forEach((s)=>{
 
-                totalSales +=
-                s.total || 0;
+            totalSales +=
+            s.total || 0;
 
-            });
-
-
-
-            let remainingCapital = 0;
-
-            products.forEach(p=>{
-
-                remainingCapital +=
-
-                (p.costPrice || 0) *
-                (p.quantity || 0);
-
-            });
+        });
 
 
 
-            res.json({
+        let remainingCapital = 0;
 
-                totalSales,
+        products.forEach((p)=>{
 
-                totalProducts:
-                products.length,
+            remainingCapital +=
 
-                totalStaff:
-                staff.length,
+            (p.costPrice || 0) *
+            (p.quantity || 0);
 
-                remainingCapital,
+        });
 
-                totalTransactions:
-                sales.length,
 
-                sales
 
-            });
+        res.json({
 
-        }catch(error){
+            totalSales,
 
-            console.log(error);
+            totalProducts:
+            products.length,
 
-            res.status(500).json({
+            totalStaff:
+            staff.length,
 
-                message:
-                "Server Error"
+            remainingCapital,
 
-            });
+            totalTransactions:
+            sales.length,
 
-        }
+            sales
+
+        });
+
+    }catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            message:
+            "Server Error"
+
+        });
+
+    }
 
 });
 
 
 
 // =====================================
-// DELETE PRODUCT
+// NOTIFICATIONS
 // =====================================
 
-app.delete(
-    "/delete-product/:id",
-    async(req,res)=>{
+app.get("/notifications", async(req,res)=>{
 
-        try{
+    try{
 
-            await Product.findByIdAndDelete(
-                req.params.id
-            );
+        const notifications =
+        await Notification.find();
 
-            res.json({
+        res.json(notifications);
 
-                message:
-                "Deleted"
+    }catch(error){
 
-            });
+        console.log(error);
 
-        }catch(error){
+        res.status(500).json({
 
-            console.log(error);
+            message:
+            "Server Error"
 
-            res.status(500).json({
+        });
 
-                message:
-                "Server Error"
-
-            });
-
-        }
-
-});
-
-
-
-// =====================================
-// GET NOTIFICATIONS
-// =====================================
-
-app.get(
-    "/notifications",
-    async(req,res)=>{
-
-        try{
-
-            const notifications =
-            await Notification.find();
-
-            res.json(notifications);
-
-        }catch(error){
-
-            console.log(error);
-
-            res.status(500).json({
-
-                message:
-                "Server Error"
-
-            });
-
-        }
+    }
 
 });
 
@@ -1065,12 +893,13 @@ app.get(
 // START SERVER
 // =====================================
 
-app.listen(
-    5000,
-    ()=>{
+const PORT =
+process.env.PORT || 5000;
 
-        console.log(
-            "Server Running On Port 5000"
-        );
+app.listen(PORT, ()=>{
+
+    console.log(
+        `Server Running On Port ${PORT}`
+    );
 
 });
