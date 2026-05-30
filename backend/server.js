@@ -182,43 +182,69 @@ app.post("/login", async(req,res)=>{
 
     try{
 
-        const {
-            username,
-            password
-        } = req.body;
+        if(!req.body){
 
-        console.log("LOGIN ATTEMPT:", username);
+            return res.status(400).json({
+                message: "No data received"
+            });
 
+        }
 
+        const username = req.body.username;
+        const password = req.body.password;
 
-        // ADMIN
-        let user =
-        await User.findOne({
-            username
-        });
+        console.log("LOGIN:", username);
 
-        console.log("USER:", user);
+        let user = await User.findOne({ username });
 
         if(user){
 
             if(user.password !== password){
 
                 return res.status(400).json({
+                    message: "Wrong Password"
+                });
 
-                    message:
-                    "Wrong Password"
+            }
 
+            return res.json({ user });
+        }
+
+        let staff = await Staff.findOne({ username });
+
+        if(staff){
+
+            if(staff.password !== password){
+
+                return res.status(400).json({
+                    message: "Wrong Password"
                 });
 
             }
 
             return res.json({
-
-                user
-
+                user: staff
             });
 
         }
+
+        return res.status(404).json({
+            message: "User Not Found"
+        });
+
+    }catch(error){
+
+        console.error(error);
+
+        return res.status(500).json({
+            message: error.message
+        });
+
+    }
+
+});
+
+
 
 
 
@@ -249,27 +275,7 @@ app.post("/login", async(req,res)=>{
 
         }
 
-        res.status(404).json({
-
-            message:
-            "User Not Found"
-
-        });
-
-    }catch(error){
-
-        console.log(error);
-
-        res.status(500).json({
-
-            message:
-            "Server Error"
-
-        });
-
-    }
-
-});
+    
 
 
 
