@@ -162,16 +162,13 @@ app.get("/create-admin", async(req,res)=>{
 
     }catch(error){
 
-        console.log(error);
+    console.error("LOGIN ERROR:", error);
 
-        res.status(500).json({
+    res.status(500).json({
+        message: error.message
+    });
 
-            message:
-            "Server Error"
-
-        });
-
-    }
+}
 
 });
 
@@ -190,6 +187,8 @@ app.post("/login", async(req,res)=>{
             password
         } = req.body;
 
+        console.log("LOGIN ATTEMPT:", username);
+
 
 
         // ADMIN
@@ -197,6 +196,8 @@ app.post("/login", async(req,res)=>{
         await User.findOne({
             username
         });
+
+        console.log("USER:", user);
 
         if(user){
 
