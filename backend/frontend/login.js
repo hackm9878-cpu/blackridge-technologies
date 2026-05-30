@@ -1,5 +1,5 @@
-const API =
-"https://blackridge-technologies-1.onrender.com";
+
+const API = "https://blackridge.onrender.com";
 
 
 
