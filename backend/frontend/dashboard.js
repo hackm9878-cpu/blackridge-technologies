@@ -1,7 +1,16 @@
-const API =
-"https://blackridge.onrender.com";
+const API = "https://blackridge.onrender.com";
 
+const user = JSON.parse(
+localStorage.getItem("user")
+);
 
+if(!user){
+    window.location.href = "login.html";
+}
+
+if(user.role !== "admin"){
+    window.location.href = "staff-dashboard.html";
+}
 
 // =====================================
 // GET USER

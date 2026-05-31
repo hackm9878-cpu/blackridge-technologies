@@ -384,15 +384,13 @@ async(req,res)=>{
     try{
 
         const {
-
-            staffId,
-            productName,
-            sellingPrice,
-            costPrice,
-            quantity,
-            barcode
-
-        } = req.body;
+    staffId,
+    name,
+    sellingPrice,
+    costPrice,
+    quantity,
+    barcode
+} = req.body;
 
 
 
@@ -403,10 +401,9 @@ async(req,res)=>{
 
 
 
-        const product =
-        new Product({
+        const product = new Product({
 
-            productName,
+    name,
 
             sellingPrice,
 
@@ -435,12 +432,15 @@ async(req,res)=>{
 
         if(staff){
 
-            staff.products.push(product._id);
+if(!staff.products){
+staff.products = [];
+}
 
-            await staff.save();
+staff.products.push(product._id);
 
-        }
+await staff.save();
 
+}
         res.json({
 
             message:
@@ -856,7 +856,33 @@ app.get("/notifications", async(req,res)=>{
 
 });
 
+// =====================================
+// DELETE PRODUCT
+// =====================================
 
+app.delete("/delete-product/:id", async(req,res)=>{
+
+    try{
+
+        await Product.findByIdAndDelete(
+            req.params.id
+        );
+
+        res.json({
+            message:"Product Deleted"
+        });
+
+    }catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+            message:"Server Error"
+        });
+
+    }
+
+});
 
 // =====================================
 // START SERVER
@@ -870,5 +896,81 @@ app.listen(PORT, ()=>{
     console.log(
         `Server Running On Port ${PORT}`
     );
+
+});
+app.get("/staff-sales/:id", async(req,res)=>{
+
+    try{
+
+        const sales =
+        await Sale.find({
+
+            staffId:req.params.id
+
+        }).sort({
+
+            createdAt:-1
+
+        });
+
+        res.json(sales);
+
+    }catch(error){
+
+        console.log(error);
+
+        res.status(500).json({
+
+            message:"Server Error"
+
+        });
+
+    }
+
+});
+
+app.post("/update-settings", async(req,res)=>{
+
+try{
+
+const {
+id,
+role,
+name,
+username,
+password
+} = req.body;
+
+if(role === "admin"){
+
+await User.findByIdAndUpdate(id,{
+name,
+username,
+password
+});
+
+}else{
+
+await Staff.findByIdAndUpdate(id,{
+name,
+username,
+password
+});
+
+}
+
+res.json({
+message:"Settings Updated Successfully"
+});
+
+}catch(error){
+
+console.log(error);
+
+res.status(500).json({
+message:"Server Error"
+});
+
+}
 
 });

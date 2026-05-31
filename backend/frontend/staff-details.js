@@ -4,9 +4,7 @@ const API =
 
 
 const staffId =
-localStorage.getItem(
-"staffId"
-);
+localStorage.getItem("viewStaffId");
 
 
 
@@ -144,9 +142,7 @@ staffId
 
 formData.append(
 "name",
-document.getElementById(
-"name"
-).value
+document.getElementById("name").value
 );
 
 
@@ -262,7 +258,7 @@ width="100%">
 
 
 <h2>
-${product.name}
+${product.productName}
 </h2>
 
 <p>
