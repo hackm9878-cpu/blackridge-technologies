@@ -248,32 +248,7 @@ app.post("/login", async(req,res)=>{
 
 
 
-        // STAFF
-        let staff =
-        await Staff.findOne({
-            username
-        });
-
-        if(staff){
-
-            if(staff.password !== password){
-
-                return res.status(400).json({
-
-                    message:
-                    "Wrong Password"
-
-                });
-
-            }
-
-            return res.json({
-
-                user:staff
-
-            });
-
-        }
+    
 
     
 
