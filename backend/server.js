@@ -1,14 +1,6 @@
 require("dotenv").config();
 
 const express = require("express");
-const app = express();
-
-app.use(cors());
-
-// ✅ THIS IS REQUIRED FOR LOGIN BODY
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const multer = require("multer");
@@ -23,49 +15,32 @@ const Notification = require("./models/Notification");
 
 const app = express();
 
-
-
 // =====================================
 // MIDDLEWARE
-// ===================================
-app.use(express.static(path.join(__dirname, "frontend")));
+// =====================================
 
-app.get("/", (req,res)=>{
-    res.sendFile(
-        path.join(__dirname, "frontend", "index.html")
-    );
-});
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+app.use(
+    "/uploads",
+    express.static(path.join(__dirname, "uploads"))
+);
 
 // =====================================
 // FRONTEND
 // =====================================
 
 app.use(
-    express.static(
-        path.join(__dirname, "frontend")
-    )
+    express.static(path.join(__dirname, "frontend"))
 );
 
-app.use(
-    express.static(
-        path.join(__dirname, "frontend")
-    )
-);
-
-app.get("/", (req,res)=>{
-
+app.get("/", (req, res) => {
     res.sendFile(
-        path.join(
-            __dirname,
-            "frontend",
-            "index.html"
-        )
+        path.join(__dirname, "frontend", "index.html")
     );
-
 });
-
-
 
 // =====================================
 // MONGODB
