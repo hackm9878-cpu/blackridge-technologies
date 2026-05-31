@@ -1,11 +1,23 @@
 
+
+console.log("LOGIN JS LOADED");
 const API = "https://blackridge.onrender.com";
 
 
 
 async function login(){
 
+console.log("BUTTON CLICKED");
+
+console.log("USERNAME:",
+document.getElementById("username").value);
+
+console.log("PASSWORD:",
+document.getElementById("password").value);
+
 try{
+
+
 
 const username =
 document.getElementById(
