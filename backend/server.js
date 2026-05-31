@@ -178,28 +178,27 @@ app.get("/create-admin", async(req,res)=>{
 // LOGIN
 // =====================================
 
-app.post("/login", async(req,res)=>{
+app.post("/login", async (req, res) => {
 
-    try{
+    try {
 
-        if(!req.body){
+        console.log("BODY RECEIVED:", req.body);
+
+        const { username, password } = req.body || {};
+
+        if (!username || !password) {
 
             return res.status(400).json({
-                message: "No data received"
+                message: "Username and Password Required"
             });
 
         }
 
-        const username = req.body.username;
-        const password = req.body.password;
+        const user = await User.findOne({ username });
 
-        console.log("LOGIN:", username);
+        if (user) {
 
-        let user = await User.findOne({ username });
-
-        if(user){
-
-            if(user.password !== password){
+            if (user.password !== password) {
 
                 return res.status(400).json({
                     message: "Wrong Password"
@@ -207,14 +206,17 @@ app.post("/login", async(req,res)=>{
 
             }
 
-            return res.json({ user });
+            return res.json({
+                user
+            });
+
         }
 
-        let staff = await Staff.findOne({ username });
+        const staff = await Staff.findOne({ username });
 
-        if(staff){
+        if (staff) {
 
-            if(staff.password !== password){
+            if (staff.password !== password) {
 
                 return res.status(400).json({
                     message: "Wrong Password"
@@ -232,9 +234,9 @@ app.post("/login", async(req,res)=>{
             message: "User Not Found"
         });
 
-    }catch(error){
+    } catch (error) {
 
-        console.error(error);
+        console.error("LOGIN ERROR:", error);
 
         return res.status(500).json({
             message: error.message
