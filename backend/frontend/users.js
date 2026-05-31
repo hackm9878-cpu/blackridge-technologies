@@ -1,6 +1,5 @@
-
 const API =
-"https://blackridge-technologies-1.onrender.com";
+"https://blackridge.onrender.com";
 const user =
 JSON.parse(
     localStorage.getItem("user")
