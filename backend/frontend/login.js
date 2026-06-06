@@ -1,118 +1,57 @@
-
-
-console.log("LOGIN JS LOADED");
-const API = "https://blackridge.onrender.com";
-
-
+const API = "http://localhost:5000";
 
 async function login(){
 
-console.log("BUTTON CLICKED");
+    const username =
+    document.getElementById("username").value;
 
-console.log("USERNAME:",
-document.getElementById("username").value);
+    const password =
+    document.getElementById("password").value;
 
-console.log("PASSWORD:",
-document.getElementById("password").value);
+    try{
 
-try{
+        const response =
+        await fetch(`${API}/login`,{
 
+            method:"POST",
 
+            headers:{
+                "Content-Type":"application/json"
+            },
 
-const username =
-document.getElementById(
-"username"
-).value;
+            body:JSON.stringify({
+                username,
+                password
+            })
 
-const password =
-document.getElementById(
-"password"
-).value;
+        });
 
+        const data =
+        await response.json();
 
+        if(response.ok){
 
-if(!username || !password){
+            localStorage.setItem(
+                "admin",
+                JSON.stringify(data.admin)
+            );
 
-document.getElementById(
-"message"
-).innerText =
-"Enter Username And Password";
+            window.location.href =
+            "dashboard.html";
 
-return;
+        }else{
 
-}
+            document.getElementById(
+                "message"
+            ).innerText =
+            data.message;
 
+        }
 
+    }catch(error){
 
-const response =
-await fetch(
+        console.log(error);
 
-`${API}/login`,
-
-{
-
-method:"POST",
-
-headers:{
-
-"Content-Type":
-"application/json"
-
-},
-
-body:JSON.stringify({
-
-username,
-password
-
-})
-
-}
-
-);
-
-
-
-const data =
-await response.json();
-
-
-
-if(response.ok){
-
-localStorage.setItem(
-
-"user",
-
-JSON.stringify(
-data.user
-)
-
-);
-
-
-
-window.location.href =
-"index.html";
-
-}else{
-
-document.getElementById(
-"message"
-).innerText =
-data.message;
-
-}
-
-}catch(error){
-
-console.log(error);
-
-document.getElementById(
-"message"
-).innerText =
-"Server Error";
-
-}
+    }
 
 }

@@ -1,60 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>
-Login
-</title>
-
-<link rel="stylesheet"
-href="style.css">
-<link rel="stylesheet" href="animation.css">
-
+    <title>4Three Data Manager</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="container">
+<div class="login-box">
 
-<div class="form">
+    <h1>4Three Data Manager</h1>
 
-<h1>
-Black Bridge Technologies
-</h1>
+    <input
+        type="text"
+        id="username"
+        placeholder="Username">
 
-<h2>
-Login
-</h2>
+    <input
+        type="password"
+        id="password"
+        placeholder="Password">
 
+    <button onclick="login()">
+        Login
+    </button>
 
-<input
-type="text"
-id="username"
-placeholder="Username">
-
-
-<input
-type="password"
-id="password"
-placeholder="Password">
-
-
-<button onclick="login()">
-
-Login
-
-</button>
-
-
-<p id="message"></p>
-
-</div>
+    <p id="message"></p>
 
 </div>
 
