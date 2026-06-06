@@ -38,12 +38,14 @@ mongoose.connect(process.env.MONGO_URI)
 // HOME
 // ======================
 
+const path = require("path");
+
+// Serve frontend folder
+app.use(express.static(path.join(__dirname, "frontend")));
+
+// Default route to login page
 app.get("/", (req, res) => {
-
-    res.json({
-        message: "4Three Data Manager API Running"
-    });
-
+    res.sendFile(path.join(__dirname, "frontend", "login.html"));
 });
 
 // ======================
