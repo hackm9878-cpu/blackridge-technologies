@@ -3,10 +3,119 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const Record = require("./models/Record");
 
 const Admin = require("./models/Admin");
 
 const app = express();
+app.post("/add-record", async (req, res) => {
+
+    try {
+
+        const { name, sponsor, code, gen, pin } = req.body;
+
+        const record = new Record({
+            name,
+            sponsor,
+            code,
+            gen,
+            pin
+        });
+
+        await record.save();
+
+        res.json({
+            message: "Record Added"
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+
+});
+
+app.post("/add-record", async (req, res) => {
+
+    try {
+
+        const { name, sponsor, code, gen, pin } = req.body;
+
+        const record = new Record({
+            name,
+            sponsor,
+            code,
+            gen,
+            pin
+        });
+
+        await record.save();
+
+        res.json({
+            message: "Record Added"
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+
+});
+
+
+app.get("/records", async (req, res) => {
+
+    try {
+
+        const data = await Record.find().sort({ createdAt: -1 });
+
+        res.json(data);
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+
+});
+
+
+app.get("/search", async (req, res) => {
+
+    try {
+
+        const { q } = req.query;
+
+        const results = await Record.find({
+            $or: [
+                { name: { $regex: q, $options: "i" } },
+                { sponsor: { $regex: q, $options: "i" } },
+                { code: { $regex: q, $options: "i" } },
+                { gen: { $regex: q, $options: "i" } },
+                { pin: { $regex: q, $options: "i" } }
+            ]
+        });
+
+        res.json(results);
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+
+});
+
 
 // ======================
 // MIDDLEWARE
