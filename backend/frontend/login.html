@@ -1,34 +1,120 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>4Three Data Manager</title>
-    <link rel="stylesheet" href="style.css">
+
+<title>
+4Three Data Manager
+</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
+
+
 <body>
 
-<div class="login-box">
 
-    <h1>4Three Data Manager</h1>
+<h1>
+4Three Data Manager
+</h1>
 
-    <input
-        type="text"
-        id="username"
-        placeholder="Username">
 
-    <input
-        type="password"
-        id="password"
-        placeholder="Password">
 
-    <button onclick="login()">
-        Login
-    </button>
+<button onclick="logout()">
+Logout
+</button>
 
-    <p id="message"></p>
+
+<br><br>
+
+
+
+<div class="box">
+
+
+<h2>
+Add New Data
+</h2>
+
+
+<input id="name" placeholder="Name">
+
+<input id="sponsor" placeholder="Sponsor">
+
+<input id="code" placeholder="Code">
+
+<input id="gen" placeholder="GEN">
+
+<input id="pin" placeholder="Pin">
+
+
+<button onclick="addRecord()">
+Save
+</button>
+
 
 </div>
 
-<script src="login.js"></script>
+
+
+
+<br>
+
+
+
+<input
+id="search"
+placeholder="Search Name, Code, Sponsor, GEN, Pin"
+>
+
+
+
+<br><br>
+
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+
+<th>Sponsor</th>
+
+<th>Code</th>
+
+<th>GEN</th>
+
+<th>Pin</th>
+
+<th>Action</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+<tbody id="recordsTable">
+
+
+</tbody>
+
+
+</table>
+
+
+
+<script src="dashboard.js"></script>
+
 
 </body>
+
+
 </html>

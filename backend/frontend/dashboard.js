@@ -1,4 +1,11 @@
-const API = "https://blackridge.onrender.com";
+const API =
+"https://blackridge.onrender.com";
+
+
+let editID = null;
+
+
+
 
 async function loadData(){
 
@@ -28,22 +35,49 @@ table.innerHTML="";
 data.forEach(item=>{
 
 
-table.innerHTML +=`
+table.innerHTML += `
+
 
 <tr>
 
+
 <td>${item.name}</td>
-
-<td>${item.code}</td>
-
-<td>${item.pin}</td>
 
 <td>${item.sponsor}</td>
 
+<td>${item.code}</td>
+
 <td>${item.gen}</td>
+
+<td>${item.pin}</td>
+
+
+
+<td>
+
+
+<button onclick="editRecord('${item._id}')">
+
+Edit
+
+</button>
+
+
+
+<button onclick="deleteRecord('${item._id}')">
+
+Delete
+
+</button>
+
+
+
+</td>
+
 
 
 </tr>
+
 
 
 `;
@@ -57,6 +91,8 @@ table.innerHTML +=`
 
 
 
+
+
 async function addRecord(){
 
 
@@ -65,39 +101,76 @@ const body={
 
 
 name:
-prompt("Name"),
+document.getElementById("name").value,
 
 
 sponsor:
-prompt("Sponsor"),
+document.getElementById("sponsor").value,
 
 
 code:
-prompt("Code"),
+document.getElementById("code").value,
 
 
 gen:
-prompt("GEN"),
+document.getElementById("gen").value,
 
 
 pin:
-prompt("Pin")
+document.getElementById("pin").value
+
+
 
 };
 
 
 
+
+
+let url =
+"/add-record";
+
+
+
+let method =
+"POST";
+
+
+
+
+
+if(editID){
+
+
+url =
+"/update-record/"+editID;
+
+
+method =
+"PUT";
+
+
+}
+
+
+
+
+
+
 await fetch(
-`${API}/add-record`,
+API+url,
 {
 
 
-method:"POST",
+method,
+
 
 headers:{
 
+
 "Content-Type":
 "application/json"
+
 
 },
 
@@ -109,6 +182,14 @@ JSON.stringify(body)
 });
 
 
+
+editID=null;
+
+
+
+clearForm();
+
+
 loadData();
 
 
@@ -118,13 +199,114 @@ loadData();
 
 
 
+function editRecord(id){
+
+
+fetch(
+`${API}/records`
+)
+
+.then(res=>res.json())
+
+.then(data=>{
+
+
+const item =
+data.find(
+x=>x._id===id
+);
+
+
+
+document.getElementById("name").value=item.name;
+
+
+document.getElementById("sponsor").value=item.sponsor;
+
+
+document.getElementById("code").value=item.code;
+
+
+document.getElementById("gen").value=item.gen;
+
+
+document.getElementById("pin").value=item.pin;
+
+
+
+editID=id;
+
+
+
+});
+
+
+
+}
+
+
+
+
+
+async function deleteRecord(id){
+
+
+
+if(!confirm("Delete this data?"))
+return;
+
+
+
+
+await fetch(
+`${API}/delete-record/${id}`,
+{
+
+method:"DELETE"
+
+});
+
+
+
+loadData();
+
+
+}
+
+
+
+
+
+
+
+function clearForm(){
+
+
+document.getElementById("name").value="";
+
+document.getElementById("sponsor").value="";
+
+document.getElementById("code").value="";
+
+document.getElementById("gen").value="";
+
+document.getElementById("pin").value="";
+
+
+}
+
+
+
+
+
+
+
 async function searchData(){
 
 
+
 const q =
-document.getElementById(
-"search"
-).value;
+document.getElementById("search").value;
 
 
 
@@ -141,9 +323,7 @@ await res.json();
 
 
 const table =
-document.getElementById(
-"recordsTable"
-);
+document.getElementById("recordsTable");
 
 
 
@@ -154,43 +334,34 @@ table.innerHTML="";
 data.forEach(item=>{
 
 
-table.innerHTML +=`
+table.innerHTML += `
 
 <tr>
 
 <td>${item.name}</td>
 
-<td>${item.code}</td>
-
-<td>${item.pin}</td>
-
 <td>${item.sponsor}</td>
+
+<td>${item.code}</td>
 
 <td>${item.gen}</td>
 
+<td>${item.pin}</td>
+
+
+<td></td>
+
+
 </tr>
 
-`;
 
+`;
 
 });
 
 
 }
 
-
-
-function logout(){
-
-localStorage.removeItem(
-"admin"
-);
-
-
-window.location.href="login.html";
-
-
-}
 
 
 
@@ -201,6 +372,24 @@ document
 "keyup",
 searchData
 );
+
+
+
+
+
+
+function logout(){
+
+
+localStorage.removeItem("admin");
+
+
+window.location.href="login.html";
+
+
+}
+
+
 
 
 

@@ -397,7 +397,74 @@ message:error.message
 
 
 
+app.put("/update-record/:id",async(req,res)=>{
 
+
+try{
+
+
+await Record.findByIdAndUpdate(
+req.params.id,
+req.body
+);
+
+
+res.json({
+
+message:"Updated"
+
+});
+
+
+}catch(error){
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+}
+
+
+});
+
+
+
+
+
+app.delete("/delete-record/:id",async(req,res)=>{
+
+
+try{
+
+
+await Record.findByIdAndDelete(
+req.params.id
+);
+
+
+res.json({
+
+message:"Deleted"
+
+});
+
+
+}catch(error){
+
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+
+}
+
+
+});
 
 // ======================
 // SERVER
