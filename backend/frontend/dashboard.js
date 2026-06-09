@@ -1,82 +1,207 @@
 const API = "https://blackridge.onrender.com";
 
-async function loadData() {
+async function loadData(){
 
-    const res = await fetch(`${API}/records`);
-    const data = await res.json();
 
-    const table = document.getElementById("table");
-    table.innerHTML = "";
+const res =
+await fetch(
+`${API}/records`
+);
 
-    data.forEach(item => {
 
-        table.innerHTML += `
-            <tr>
-                <td>${item.name}</td>
-                <td>${item.sponsor}</td>
-                <td>${item.code}</td>
-                <td>${item.gen}</td>
-                <td>${item.pin}</td>
-            </tr>
-        `;
+const data =
+await res.json();
 
-    });
 
-}
 
-async function addRecord() {
+const table =
+document.getElementById(
+"recordsTable"
+);
 
-    const body = {
-        name: document.getElementById("name").value,
-        sponsor: document.getElementById("sponsor").value,
-        code: document.getElementById("code").value,
-        gen: document.getElementById("gen").value,
-        pin: document.getElementById("pin").value
-    };
 
-    await fetch(`${API}/add-record`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-    });
 
-    loadData();
+table.innerHTML="";
 
-}
 
-async function searchData() {
 
-    const q = document.getElementById("search").value;
+data.forEach(item=>{
 
-    const res = await fetch(`${API}/search?q=${q}`);
-    const data = await res.json();
 
-    const table = document.getElementById("table");
-    table.innerHTML = "";
+table.innerHTML +=`
 
-    data.forEach(item => {
+<tr>
 
-        table.innerHTML += `
-            <tr>
-                <td>${item.name}</td>
-                <td>${item.sponsor}</td>
-                <td>${item.code}</td>
-                <td>${item.gen}</td>
-                <td>${item.pin}</td>
-            </tr>
-        `;
+<td>${item.name}</td>
 
-    });
+<td>${item.code}</td>
+
+<td>${item.pin}</td>
+
+<td>${item.sponsor}</td>
+
+<td>${item.gen}</td>
+
+
+</tr>
+
+
+`;
+
+
+});
+
 
 }
+
+
+
+
+async function addRecord(){
+
+
+
+const body={
+
+
+name:
+prompt("Name"),
+
+
+sponsor:
+prompt("Sponsor"),
+
+
+code:
+prompt("Code"),
+
+
+gen:
+prompt("GEN"),
+
+
+pin:
+prompt("Pin")
+
+};
+
+
+
+await fetch(
+`${API}/add-record`,
+{
+
+
+method:"POST",
+
+headers:{
+
+"Content-Type":
+"application/json"
+
+},
+
+
+body:
+JSON.stringify(body)
+
+
+});
+
 
 loadData();
 
-function logout(){
-
-    localStorage.removeItem("admin");
-
-    window.location.href =
-    "login.html";
 
 }
+
+
+
+
+
+async function searchData(){
+
+
+const q =
+document.getElementById(
+"search"
+).value;
+
+
+
+const res =
+await fetch(
+`${API}/search?q=${q}`
+);
+
+
+
+const data =
+await res.json();
+
+
+
+const table =
+document.getElementById(
+"recordsTable"
+);
+
+
+
+table.innerHTML="";
+
+
+
+data.forEach(item=>{
+
+
+table.innerHTML +=`
+
+<tr>
+
+<td>${item.name}</td>
+
+<td>${item.code}</td>
+
+<td>${item.pin}</td>
+
+<td>${item.sponsor}</td>
+
+<td>${item.gen}</td>
+
+</tr>
+
+`;
+
+
+});
+
+
+}
+
+
+
+function logout(){
+
+localStorage.removeItem(
+"admin"
+);
+
+
+window.location.href="login.html";
+
+
+}
+
+
+
+
+document
+.getElementById("search")
+.addEventListener(
+"keyup",
+searchData
+);
+
+
+
+loadData();

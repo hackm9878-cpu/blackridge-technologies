@@ -3,118 +3,13 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const Record = require("./models/Record");
+const path = require("path");
 
+const Record = require("./models/Record");
 const Admin = require("./models/Admin");
 
+
 const app = express();
-app.post("/add-record", async (req, res) => {
-
-    try {
-
-        const { name, sponsor, code, gen, pin } = req.body;
-
-        const record = new Record({
-            name,
-            sponsor,
-            code,
-            gen,
-            pin
-        });
-
-        await record.save();
-
-        res.json({
-            message: "Record Added"
-        });
-
-    } catch (error) {
-
-        res.status(500).json({
-            message: error.message
-        });
-
-    }
-
-});
-
-app.post("/add-record", async (req, res) => {
-
-    try {
-
-        const { name, sponsor, code, gen, pin } = req.body;
-
-        const record = new Record({
-            name,
-            sponsor,
-            code,
-            gen,
-            pin
-        });
-
-        await record.save();
-
-        res.json({
-            message: "Record Added"
-        });
-
-    } catch (error) {
-
-        res.status(500).json({
-            message: error.message
-        });
-
-    }
-
-});
-
-
-app.get("/records", async (req, res) => {
-
-    try {
-
-        const data = await Record.find().sort({ createdAt: -1 });
-
-        res.json(data);
-
-    } catch (error) {
-
-        res.status(500).json({
-            message: error.message
-        });
-
-    }
-
-});
-
-
-app.get("/search", async (req, res) => {
-
-    try {
-
-        const { q } = req.query;
-
-        const results = await Record.find({
-            $or: [
-                { name: { $regex: q, $options: "i" } },
-                { sponsor: { $regex: q, $options: "i" } },
-                { code: { $regex: q, $options: "i" } },
-                { gen: { $regex: q, $options: "i" } },
-                { pin: { $regex: q, $options: "i" } }
-            ]
-        });
-
-        res.json(results);
-
-    } catch (error) {
-
-        res.status(500).json({
-            message: error.message
-        });
-
-    }
-
-});
 
 
 // ======================
@@ -122,155 +17,404 @@ app.get("/search", async (req, res) => {
 // ======================
 
 app.use(cors());
+
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+app.use(express.urlencoded({
+    extended:true
+}));
+
 
 // ======================
-// MONGODB CONNECTION
+// MONGODB
 // ======================
 
 mongoose.connect(process.env.MONGO_URI)
 
-.then(() => {
+.then(()=>{
 
-    console.log("MongoDB Connected");
+console.log("MongoDB Connected");
 
 })
 
-.catch((err) => {
+.catch(err=>{
 
-    console.log("MongoDB Error:", err);
+console.log(err);
 
 });
 
+
+
 // ======================
-// HOME
+// FRONTEND
 // ======================
 
-const path = require("path");
+app.use(
+express.static(
+path.join(__dirname,"frontend")
+)
+);
 
-// Serve frontend folder
-app.use(express.static(path.join(__dirname, "frontend")));
 
-// Default route to login page
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "frontend", "login.html"));
+app.get("/",(req,res)=>{
+
+res.sendFile(
+path.join(
+__dirname,
+"frontend",
+"login.html"
+)
+);
+
 });
+
+
+
 
 // ======================
 // CREATE ADMIN
 // ======================
 
-app.get("/create-admin", async (req, res) => {
+app.get("/create-admin",async(req,res)=>{
 
-    try {
+try{
 
-        const adminExists = await Admin.findOne({
-            username: "admin"
-        });
 
-        if (adminExists) {
+const exists =
+await Admin.findOne({
+username:"admin"
+});
 
-            return res.json({
-                message: "Admin already exists"
-            });
 
-        }
+if(exists){
 
-        const admin = new Admin({
+return res.json({
+message:"Admin already exists"
+});
 
-            username: "admin",
-            password: "admin123"
+}
 
-        });
 
-        await admin.save();
 
-        res.json({
-            message: "Admin created successfully"
-        });
+const admin =
+new Admin({
 
-    } catch (error) {
+username:"admin",
 
-        res.status(500).json({
-            message: error.message
-        });
-
-    }
+password:"admin123"
 
 });
+
+
+await admin.save();
+
+
+
+res.json({
+
+message:"Admin created"
+
+});
+
+
+}catch(error){
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+}
+
+
+});
+
+
+
 
 // ======================
 // LOGIN
 // ======================
 
-app.post("/login", async (req, res) => {
 
-    try {
+app.post("/login",async(req,res)=>{
 
-        const { username, password } = req.body;
 
-        if (!username || !password) {
+try{
 
-            return res.status(400).json({
-                message: "Username and Password Required"
-            });
 
-        }
+const {
+username,
+password
+}=req.body;
 
-        const admin = await Admin.findOne({
-            username
-        });
 
-        if (!admin) {
 
-            return res.status(404).json({
-                message: "Admin Not Found"
-            });
+const admin =
+await Admin.findOne({
+username
+});
 
-        }
 
-        if (admin.password !== password) {
 
-            return res.status(400).json({
-                message: "Wrong Password"
-            });
+if(!admin){
 
-        }
+return res.status(404).json({
 
-        res.json({
-
-            message: "Login Successful",
-
-            admin: {
-
-                _id: admin._id,
-                username: admin.username
-
-            }
-
-        });
-
-    } catch (error) {
-
-        res.status(500).json({
-            message: error.message
-        });
-
-    }
+message:"Admin not found"
 
 });
 
+}
+
+
+
+if(admin.password !== password){
+
+
+return res.status(400).json({
+
+message:"Wrong password"
+
+});
+
+
+}
+
+
+
+res.json({
+
+message:"Login success",
+
+admin
+
+});
+
+
+
+}catch(error){
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+}
+
+
+});
+
+
+
+
+
 // ======================
-// START SERVER
+// ADD RECORD
 // ======================
 
-const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+app.post("/add-record",async(req,res)=>{
 
-    console.log(
-        `Server Running On Port ${PORT}`
-    );
+
+try{
+
+
+const {
+name,
+sponsor,
+code,
+gen,
+pin
+
+}=req.body;
+
+
+
+const record =
+new Record({
+
+name,
+sponsor,
+code,
+gen,
+pin
+
+});
+
+
+
+await record.save();
+
+
+
+res.json({
+
+message:"Record Added"
+
+});
+
+
+
+}catch(error){
+
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+
+}
+
+
+});
+
+
+
+
+
+// ======================
+// GET RECORDS
+// ======================
+
+
+app.get("/records",async(req,res)=>{
+
+
+try{
+
+
+const records =
+await Record.find()
+.sort({
+createdAt:-1
+});
+
+
+
+res.json(records);
+
+
+
+}catch(error){
+
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+
+}
+
+
+});
+
+
+
+
+
+// ======================
+// SEARCH
+// ======================
+
+
+app.get("/search",async(req,res)=>{
+
+
+try{
+
+
+const q=req.query.q;
+
+
+
+const data =
+await Record.find({
+
+$or:[
+
+{name:{
+$regex:q,
+$options:"i"
+}},
+
+
+{sponsor:{
+$regex:q,
+$options:"i"
+}},
+
+
+{code:{
+$regex:q,
+$options:"i"
+}},
+
+
+{gen:{
+$regex:q,
+$options:"i"
+}},
+
+
+{pin:{
+$regex:q,
+$options:"i"
+}}
+
+
+]
+
+
+});
+
+
+
+res.json(data);
+
+
+
+}catch(error){
+
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+
+}
+
+
+});
+
+
+
+
+
+// ======================
+// SERVER
+// ======================
+
+
+const PORT =
+process.env.PORT || 5000;
+
+
+
+app.listen(PORT,()=>{
+
+
+console.log(
+`Server running on ${PORT}`
+);
+
 
 });
