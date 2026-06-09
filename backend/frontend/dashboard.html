@@ -1,34 +1,67 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  
-<title>Dashboard</title>
+
+<title>
+4Three Data Manager
+</title>
 
 <link rel="stylesheet" href="style.css">
 
 </head>
+
+
 <body>
 
 
-<h1>4Three Data Manager</h1>
+<h1>
+4Three Data Manager
+</h1>
 
-<input
-type="text"
-id="search"
-placeholder="Search"
-onkeyup="searchData()">
 
 <button onclick="logout()">
 Logout
 </button>
 
-<br><br>
+
+
+<h2>
+Add New Data
+</h2>
+
+
+<input id="name" placeholder="Name">
+
+<input id="sponsor" placeholder="Sponsor">
+
+<input id="code" placeholder="Code">
+
+<input id="gen" placeholder="GEN">
+
+<input id="pin" placeholder="Pin">
+
 
 <button onclick="addRecord()">
-Add Record
+Save
 </button>
 
+
+
+
+<br><br>
+
+
+<input
+id="search"
+placeholder="Search Name, Code, Sponsor, GEN, Pin"
+onkeyup="searchData()"
+>
+
+
+
 <table class="excel-table">
+
 
 <thead>
 
@@ -36,7 +69,7 @@ Add Record
 
 <th>Name</th>
 
-<th>Sponsors</th>
+<th>Sponsor</th>
 
 <th>Code</th>
 
@@ -49,7 +82,9 @@ Add Record
 
 </tr>
 
+
 </thead>
+
 
 
 <tbody id="recordsTable">
@@ -58,10 +93,15 @@ Add Record
 </tbody>
 
 
+
 </table>
+
+
 
 <script src="dashboard.js"></script>
 
-</body>
-</html>
 
+</body>
+
+
+</html>

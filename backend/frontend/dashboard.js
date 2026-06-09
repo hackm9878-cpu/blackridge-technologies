@@ -6,12 +6,12 @@ const API = "https://blackridge.onrender.com";
 // ======================
 
 const admin =
-localStorage.getItem("admin");
+JSON.parse(localStorage.getItem("admin"));
 
 
 if(!admin){
 
-window.location.replace("login.html");
+window.location.href="login.html";
 
 }
 

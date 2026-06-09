@@ -3,6 +3,7 @@ const API = "https://blackridge.onrender.com";
 
 async function login(){
 
+
 const username =
 document.getElementById("username").value;
 
@@ -15,8 +16,8 @@ document.getElementById("password").value;
 try{
 
 
-const response =
-await fetch(`${API}/login`,
+const res = await fetch(
+`${API}/login`,
 {
 
 method:"POST",
@@ -35,13 +36,12 @@ password
 });
 
 
-
 const data =
-await response.json();
+await res.json();
 
 
 
-if(response.ok){
+if(res.ok){
 
 
 localStorage.setItem(
@@ -50,16 +50,18 @@ JSON.stringify(data.admin)
 );
 
 
+
 window.location.href =
 "dashboard.html";
 
 
-}else{
+}
+else{
 
 
 document.getElementById(
 "message"
-).innerText =
+).innerHTML =
 data.message;
 
 
@@ -67,10 +69,12 @@ data.message;
 
 
 
-}catch(error){
+}catch(err){
 
-console.log(error);
+console.log(err);
 
 }
+
+
 
 }
