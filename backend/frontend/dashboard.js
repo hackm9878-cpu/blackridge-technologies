@@ -3,14 +3,15 @@ const API = "https://blackridge.onrender.com";
 
 // CHECK LOGIN
 
-const admin = JSON.parse(
-localStorage.getItem("admin")
-);
+const admin =
+localStorage.getItem("admin");
 
 
 if(!admin){
 
-window.location.href="login.html";
+window.location.replace(
+"login.html"
+);
 
 }
 

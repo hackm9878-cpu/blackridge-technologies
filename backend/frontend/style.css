@@ -235,3 +235,36 @@ padding:8px 15px;
 cursor:pointer;
 
 }
+
+.excel-table{
+
+width:100%;
+border-collapse:collapse;
+background:white;
+
+}
+
+
+.excel-table th{
+
+background:#222;
+color:white;
+padding:12px;
+text-align:left;
+
+}
+
+
+.excel-table td{
+
+border:1px solid #ccc;
+padding:10px;
+
+}
+
+
+.excel-table tr:hover{
+
+background:#f1f1f1;
+
+}
