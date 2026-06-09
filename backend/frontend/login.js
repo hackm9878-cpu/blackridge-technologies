@@ -27,7 +27,10 @@ async function login(){
         });
 
         const data =
-        await response.json();
+        await response.json();localStorage.setItem(
+"admin",
+JSON.stringify(data.admin)
+);
 
         if(response.ok){
 
@@ -36,8 +39,7 @@ async function login(){
                 JSON.stringify(data.admin)
             );
 
-            window.location.href =
-            "dashboard.html";
+            window.location.replace("dashboard.html");
 
         }else{
 

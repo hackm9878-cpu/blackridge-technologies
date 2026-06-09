@@ -2,23 +2,26 @@ const API = "https://blackridge.onrender.com";
 
 
 // CHECK LOGIN
+
 const admin = JSON.parse(
-    localStorage.getItem("admin")
+localStorage.getItem("admin")
 );
 
 
 if(!admin){
 
-    window.location.href = "login.html";
+window.location.href="login.html";
 
 }
 
 
 
 // LOAD DATA
+
 async function loadData(){
 
 try{
+
 
 const res = await fetch(
 `${API}/records`
@@ -28,11 +31,14 @@ const res = await fetch(
 const data = await res.json();
 
 
+
 const table =
-document.getElementById("recordsTable");
+document.getElementById(
+"recordsTable"
+);
 
 
-table.innerHTML = "";
+table.innerHTML="";
 
 
 
@@ -56,12 +62,12 @@ table.innerHTML += `
 
 <td>
 
-<button onclick="editRecord('${item._id}')">
+<button>
 Edit
 </button>
 
 
-<button onclick="deleteRecord('${item._id}')">
+<button>
 Delete
 </button>
 
@@ -73,7 +79,6 @@ Delete
 
 
 `;
-
 
 });
 
@@ -89,49 +94,81 @@ console.log(error);
 
 
 
-// ADD RECORD
-
-function addRecord(){
-
-window.location.href="add.html";
-
-}
 
 
+// SEARCH
 
-// DELETE
-
-async function deleteRecord(id){
+async function searchData(){
 
 
-if(!confirm("Delete this data?"))
-return;
+const q =
+document.getElementById(
+"search"
+).value;
 
 
 
+const res =
 await fetch(
-
-`${API}/delete-record/${id}`,
-
-{
-
-method:"DELETE"
-
-}
-
+`${API}/search?q=${q}`
 );
 
 
-loadData();
+
+const data =
+await res.json();
+
+
+
+const table =
+document.getElementById(
+"recordsTable"
+);
+
+
+
+table.innerHTML="";
+
+
+
+data.forEach(item=>{
+
+
+table.innerHTML += `
+
+<tr>
+
+<td>${item.name}</td>
+
+<td>${item.sponsor}</td>
+
+<td>${item.code}</td>
+
+<td>${item.gen}</td>
+
+<td>${item.pin}</td>
+
+<td>
+
+<button>Edit</button>
+
+<button>Delete</button>
+
+</td>
+
+
+</tr>
+
+
+`;
+
+});
 
 
 }
 
 
 
-
-
-// LOGOUT
 
 function logout(){
 
@@ -146,7 +183,6 @@ window.location.href =
 
 
 }
-
 
 
 
