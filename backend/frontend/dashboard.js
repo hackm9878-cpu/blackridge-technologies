@@ -1,3 +1,15 @@
+
+const admin =
+JSON.parse(localStorage.getItem("admin"));
+
+
+if(!admin){
+
+window.location.href =
+"login.html";
+
+}
+
 const API =
 "https://blackridge.onrender.com";
 
@@ -380,12 +392,10 @@ searchData
 
 function logout(){
 
+localStorage.clear();
 
-localStorage.removeItem("admin");
-
-
-window.location.href="login.html";
-
+window.location.href =
+"login.html";
 
 }
 
