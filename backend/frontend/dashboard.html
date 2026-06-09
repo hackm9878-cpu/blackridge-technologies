@@ -9,6 +9,20 @@
 </head>
 <body>
 
+<script>
+
+const admin =
+localStorage.getItem("admin");
+
+
+if(!admin){
+
+window.location.href="login.html";
+
+}
+
+</script>
+
 <h1>4Three Data Manager</h1>
 
 <input
@@ -33,19 +47,28 @@ Add Record
 <tr>
 
 <th>Name</th>
-<th>Code</th>
-<th>Pin</th>
+
 <th>Sponsors</th>
+
+<th>Code</th>
+
 <th>GEN</th>
+
+<th>Pin</th>
+
+<th>Action</th>
 
 
 </tr>
 
 </thead>
 
+
 <tbody id="recordsTable">
 
+
 </tbody>
+
 
 </table>
 
