@@ -1,7 +1,9 @@
 const API = "https://blackridge.onrender.com";
 
 
+// ======================
 // CHECK LOGIN
+// ======================
 
 const admin =
 localStorage.getItem("admin");
@@ -9,27 +11,29 @@ localStorage.getItem("admin");
 
 if(!admin){
 
-window.location.replace(
-"login.html"
-);
+window.location.replace("login.html");
 
 }
 
 
 
+// ======================
 // LOAD DATA
+// ======================
 
 async function loadData(){
 
 try{
 
 
-const res = await fetch(
+const res =
+await fetch(
 `${API}/records`
 );
 
 
-const data = await res.json();
+const data =
+await res.json();
 
 
 
@@ -39,7 +43,8 @@ document.getElementById(
 );
 
 
-table.innerHTML="";
+
+table.innerHTML = "";
 
 
 
@@ -50,25 +55,25 @@ table.innerHTML += `
 
 <tr>
 
-<td>${item.name}</td>
+<td>${item.name || ""}</td>
 
-<td>${item.sponsor}</td>
+<td>${item.sponsor || ""}</td>
 
-<td>${item.code}</td>
+<td>${item.code || ""}</td>
 
-<td>${item.gen}</td>
+<td>${item.gen || ""}</td>
 
-<td>${item.pin}</td>
+<td>${item.pin || ""}</td>
 
 
 <td>
 
-<button>
+<button onclick="editRecord('${item._id}')">
 Edit
 </button>
 
 
-<button>
+<button onclick="deleteRecord('${item._id}')">
 Delete
 </button>
 
@@ -77,7 +82,6 @@ Delete
 
 
 </tr>
-
 
 `;
 
@@ -90,6 +94,78 @@ console.log(error);
 
 }
 
+}
+
+
+
+
+
+// ======================
+// ADD RECORD
+// ======================
+
+
+async function addRecord(){
+
+
+const name =
+prompt("Name");
+
+
+const sponsor =
+prompt("Sponsor");
+
+
+const code =
+prompt("Code");
+
+
+const gen =
+prompt("GEN");
+
+
+const pin =
+prompt("PIN");
+
+
+
+if(!name) return;
+
+
+
+await fetch(
+
+`${API}/add-record`,
+
+{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify({
+
+name,
+sponsor,
+code,
+gen,
+pin
+
+})
+
+}
+
+
+);
+
+
+
+loadData();
+
 
 }
 
@@ -97,7 +173,11 @@ console.log(error);
 
 
 
+
+// ======================
 // SEARCH
+// ======================
+
 
 async function searchData(){
 
@@ -109,9 +189,21 @@ document.getElementById(
 
 
 
+if(q===""){
+
+loadData();
+
+return;
+
+}
+
+
+
 const res =
 await fetch(
+
 `${API}/search?q=${q}`
+
 );
 
 
@@ -139,24 +231,30 @@ table.innerHTML += `
 
 <tr>
 
-<td>${item.name}</td>
+<td>${item.name || ""}</td>
 
-<td>${item.sponsor}</td>
+<td>${item.sponsor || ""}</td>
 
-<td>${item.code}</td>
+<td>${item.code || ""}</td>
 
-<td>${item.gen}</td>
+<td>${item.gen || ""}</td>
 
-<td>${item.pin}</td>
+<td>${item.pin || ""}</td>
+
 
 <td>
 
-<button>Edit</button>
+<button>
+Edit
+</button>
 
-<button>Delete</button>
+
+<button>
+Delete
+</button>
+
 
 </td>
-
 
 </tr>
 
@@ -171,6 +269,67 @@ table.innerHTML += `
 
 
 
+
+// ======================
+// DELETE
+// ======================
+
+
+async function deleteRecord(id){
+
+
+if(!confirm("Delete record?"))
+return;
+
+
+
+await fetch(
+
+`${API}/delete-record/${id}`,
+
+{
+
+method:"DELETE"
+
+}
+
+);
+
+
+
+loadData();
+
+
+}
+
+
+
+
+
+
+// ======================
+// EDIT
+// ======================
+
+
+function editRecord(id){
+
+alert(
+"Edit system coming next"
+);
+
+}
+
+
+
+
+
+
+// ======================
+// LOGOUT
+// ======================
+
+
 function logout(){
 
 
@@ -179,11 +338,15 @@ localStorage.removeItem(
 );
 
 
-window.location.href =
-"login.html";
+
+window.location.replace(
+"login.html"
+);
 
 
 }
+
+
 
 
 
