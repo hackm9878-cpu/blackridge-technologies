@@ -395,12 +395,20 @@ loadData();
 
 async function uploadExcel(){
 
-
 const file =
 document.getElementById("excelFile").files[0];
 
 
-const formData = new FormData();
+if(!file){
+
+alert("Select Excel file first");
+return;
+
+}
+
+
+const formData =
+new FormData();
 
 
 formData.append(
@@ -410,8 +418,14 @@ file
 
 
 
-const res = await fetch(
-`${API}/import-excel`,
+try{
+
+
+const res =
+await fetch(
+
+`${API}/upload-excel`,
+
 {
 
 method:"POST",
@@ -423,15 +437,26 @@ body:formData
 );
 
 
-const data = await res.json();
+
+const data =
+await res.json();
 
 
 
 alert(data.message);
 
 
-
 loadData();
+
+
+
+}catch(error){
+
+console.log(error);
+
+alert("Upload failed");
+
+}
 
 
 }
