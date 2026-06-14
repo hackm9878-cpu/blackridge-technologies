@@ -503,9 +503,9 @@ row.PIN ||
 
 
 sponsor:
-row["Sponsor ID"] ||
+row["SUPONSOR ID"] ||
 row["Suponsor ID"] ||
-row.Sponsor ||
+row["SPONSOR ID"] ||
 "",
 
 
