@@ -437,8 +437,7 @@ message:"Password changed"
 
 // ======================
 // EXCEL UPLOAD
-// ======================
-
+// ===================
 
 app.post(
 "/upload-excel",
@@ -446,8 +445,17 @@ upload.single("file"),
 
 async(req,res)=>{
 
-
 try{
+
+
+if(!req.file){
+
+return res.status(400).json({
+message:"No file uploaded"
+});
+
+}
+
 
 
 const workbook =
@@ -465,25 +473,52 @@ XLSX.utils.sheet_to_json(sheet);
 
 
 
-
 for(const row of rows){
+
 
 
 await Record.create({
 
-name:row.Name || "",
 
-code:row.Code || "",
+name:
+row.Name ||
+row.NAME ||
+row["Name "] ||
+"",
 
-pin:row.Pin || "",
+
+
+code:
+row.Code ||
+row.CODE ||
+"",
+
+
+
+pin:
+row.Pin ||
+row.PIN ||
+"",
+
+
 
 sponsor:
-row["Suponsor ID"] || "",
+row["Sponsor ID"] ||
+row["Suponsor ID"] ||
+row.Sponsor ||
+"",
+
+
 
 gen:
-row.GEN || ""
+row.GEN ||
+row.Gen ||
+""
+
+
 
 });
+
 
 
 }
@@ -492,7 +527,7 @@ row.GEN || ""
 
 res.json({
 
-message:"Excel uploaded",
+message:"Excel uploaded successfully",
 
 total:rows.length
 
@@ -503,6 +538,9 @@ total:rows.length
 }catch(error){
 
 
+console.log(error);
+
+
 res.status(500).json({
 
 message:error.message
@@ -511,7 +549,6 @@ message:error.message
 
 
 }
-
 
 
 });
