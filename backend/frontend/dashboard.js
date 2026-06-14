@@ -107,13 +107,13 @@ table.innerHTML += `
 
 <td>${item.name || ""}</td>
 
-<td>${item.sponsor || ""}</td>
-
 <td>${item.code || ""}</td>
 
-<td>${item.gen || ""}</td>
-
 <td>${item.pin || ""}</td>
+
+<td>${item.sponsor || ""}</td>
+
+<td>${item.gen || ""}</td>
 
 
 <td>
@@ -278,16 +278,15 @@ table.innerHTML += `
 
 <tr>
 
-<td>${item.name}</td>
+<td>${item.name || ""}</td>
 
-<td>${item.sponsor}</td>
+<td>${item.code || ""}</td>
 
-<td>${item.code}</td>
+<td>${item.pin || ""}</td>
 
-<td>${item.gen}</td>
+<td>${item.sponsor || ""}</td>
 
-<td>${item.pin}</td>
-
+<td>${item.gen || ""}</td>
 <td>
 
 <button>
