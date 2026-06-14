@@ -534,37 +534,75 @@ message:error.message
 const PORT =
 process.env.PORT || 5000;
 
-app.post("/import-excel", upload.single("file"), async(req,res)=>{
+
+app.post("/upload-excel", upload.single("file"), async(req,res)=>{
 
 try{
 
 
-const workbook = XLSX.readFile(req.file.path);
+const workbook =
+XLSX.readFile(req.file.path);
 
 
-const sheet = workbook.Sheets[
-workbook.SheetNames[0]
-];
+const sheet =
+workbook.Sheets[workbook.SheetNames[0]];
 
 
-const data = XLSX.utils.sheet_to_json(sheet);
+const rows =
+XLSX.utils.sheet_to_json(sheet);
 
 
 
-await Record.insertMany(data);
+for(let row of rows){
+
+
+const record = new Record({
+
+name:
+row.Name || "",
+
+
+code:
+row.Code || "",
+
+
+pin:
+row.Pin || "",
+
+
+sponsor:
+row["Suponsor ID"] ||
+row["Sponsor ID"] ||
+"",
+
+
+gen:
+row.GEN || ""
+
+
+});
+
+
+await record.save();
+
+
+}
 
 
 
 res.json({
 
-message:"Excel imported successfully",
+message:"Excel uploaded successfully",
 
-total:data.length
+total:rows.length
 
 });
 
 
 }catch(error){
+
+
+console.log(error);
 
 
 res.status(500).json({
