@@ -1,10 +1,6 @@
 const API = "https://blackridge.onrender.com";
 
 
-// ======================
-// CHECK LOGIN
-// ======================
-
 const admin =
 JSON.parse(localStorage.getItem("admin"));
 
@@ -15,11 +11,70 @@ window.location.href="login.html";
 
 }
 
-
-
 // ======================
+// CHANGE PASSWORD
+// ======================
+
+
+async function changePassword(){
+
+
+const newPassword =
+prompt("Enter new password");
+
+
+
+if(!newPassword){
+
+return;
+
+}
+
+
+
+const admin =
+JSON.parse(
+localStorage.getItem("admin")
+);
+
+
+
+const res =
+await fetch(
+`${API}/change-password/${admin._id}`,
+{
+
+method:"PUT",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify({
+
+password:newPassword
+
+})
+
+}
+
+);
+
+
+
+const data =
+await res.json();
+
+
+
+alert(data.message);
+
+
+}
+
 // LOAD DATA
-// ======================
 
 async function loadData(){
 
@@ -27,9 +82,7 @@ try{
 
 
 const res =
-await fetch(
-`${API}/records`
-);
+await fetch(`${API}/records`);
 
 
 const data =
@@ -38,13 +91,10 @@ await res.json();
 
 
 const table =
-document.getElementById(
-"recordsTable"
-);
+document.getElementById("recordsTable");
 
 
-
-table.innerHTML = "";
+table.innerHTML="";
 
 
 
@@ -83,7 +133,9 @@ Delete
 
 </tr>
 
+
 `;
+
 
 });
 
@@ -100,43 +152,43 @@ console.log(error);
 
 
 
-// ======================
 // ADD RECORD
-// ======================
-
 
 async function addRecord(){
 
 
 const name =
-prompt("Name");
+document.getElementById("name").value;
 
 
 const sponsor =
-prompt("Sponsor");
+document.getElementById("sponsor").value;
 
 
 const code =
-prompt("Code");
+document.getElementById("code").value;
 
 
 const gen =
-prompt("GEN");
+document.getElementById("gen").value;
 
 
 const pin =
-prompt("PIN");
+document.getElementById("pin").value;
 
 
 
-if(!name) return;
+if(!name){
+
+alert("Enter name");
+
+return;
+
+}
 
 
 
-await fetch(
-
-`${API}/add-record`,
-
+await fetch(`${API}/add-record`,
 {
 
 method:"POST",
@@ -157,10 +209,17 @@ pin
 
 })
 
-}
+});
 
 
-);
+
+// clear form
+
+document.getElementById("name").value="";
+document.getElementById("sponsor").value="";
+document.getElementById("code").value="";
+document.getElementById("gen").value="";
+document.getElementById("pin").value="";
 
 
 
@@ -172,20 +231,14 @@ loadData();
 
 
 
-
-
-// ======================
 // SEARCH
-// ======================
 
 
 async function searchData(){
 
 
 const q =
-document.getElementById(
-"search"
-).value;
+document.getElementById("search").value;
 
 
 
@@ -200,11 +253,7 @@ return;
 
 
 const res =
-await fetch(
-
-`${API}/search?q=${q}`
-
-);
+await fetch(`${API}/search?q=${q}`);
 
 
 
@@ -214,9 +263,7 @@ await res.json();
 
 
 const table =
-document.getElementById(
-"recordsTable"
-);
+document.getElementById("recordsTable");
 
 
 
@@ -231,16 +278,15 @@ table.innerHTML += `
 
 <tr>
 
-<td>${item.name || ""}</td>
+<td>${item.name}</td>
 
-<td>${item.sponsor || ""}</td>
+<td>${item.sponsor}</td>
 
-<td>${item.code || ""}</td>
+<td>${item.code}</td>
 
-<td>${item.gen || ""}</td>
+<td>${item.gen}</td>
 
-<td>${item.pin || ""}</td>
-
+<td>${item.pin}</td>
 
 <td>
 
@@ -248,18 +294,18 @@ table.innerHTML += `
 Edit
 </button>
 
-
 <button>
 Delete
 </button>
 
-
 </td>
+
 
 </tr>
 
 
 `;
+
 
 });
 
@@ -270,31 +316,18 @@ Delete
 
 
 
-// ======================
-// DELETE
-// ======================
+function deleteRecord(id){
 
 
-async function deleteRecord(id){
+if(confirm("Delete record?")){
 
 
-if(!confirm("Delete record?"))
-return;
-
-
-
-await fetch(
-
-`${API}/delete-record/${id}`,
-
+fetch(`${API}/delete-record/${id}`,
 {
 
 method:"DELETE"
 
-}
-
-);
-
+});
 
 
 loadData();
@@ -303,51 +336,62 @@ loadData();
 }
 
 
-
-
-
-
-// ======================
-// EDIT
-// ======================
-
-
-function editRecord(id){
-
-alert(
-"Edit system coming next"
-);
-
 }
 
 
-
-
-
-
-// ======================
-// LOGOUT
-// ======================
 
 
 function logout(){
 
+localStorage.removeItem("admin");
 
-localStorage.removeItem(
-"admin"
-);
-
-
-
-window.location.replace(
-"login.html"
-);
-
+window.location.href="login.html";
 
 }
 
 
 
+loadData();
+
+async function uploadExcel(){
+
+
+const file =
+document.getElementById("excelFile").files[0];
+
+
+const formData = new FormData();
+
+
+formData.append(
+"file",
+file
+);
+
+
+
+const res = await fetch(
+`${API}/import-excel`,
+{
+
+method:"POST",
+
+body:formData
+
+}
+
+);
+
+
+const data = await res.json();
+
+
+
+alert(data.message);
+
 
 
 loadData();
+
+
+}

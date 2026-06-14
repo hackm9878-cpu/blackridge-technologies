@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+const multer = require("multer");
+const XLSX = require("xlsx");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -24,6 +26,9 @@ app.use(express.urlencoded({
     extended:true
 }));
 
+const upload = multer({
+    dest:"uploads/"
+});
 
 // ======================
 // MONGODB
@@ -291,7 +296,7 @@ try{
 const records =
 await Record.find()
 .sort({
-createdAt:-1
+createdAt:1
 });
 
 
@@ -467,6 +472,61 @@ message:error.message
 });
 
 // ======================
+// CHANGE PASSWORD
+// ======================
+
+
+app.put("/change-password/:id",
+async(req,res)=>{
+
+
+try{
+
+
+const {
+password
+}=req.body;
+
+
+
+await Admin.findByIdAndUpdate(
+
+req.params.id,
+
+{
+
+password
+
+}
+
+);
+
+
+
+res.json({
+
+message:"Password changed successfully"
+
+});
+
+
+
+}catch(error){
+
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+
+}
+
+
+});
+
+// ======================
 // SERVER
 // ======================
 
@@ -474,7 +534,50 @@ message:error.message
 const PORT =
 process.env.PORT || 5000;
 
+app.post("/import-excel", upload.single("file"), async(req,res)=>{
 
+try{
+
+
+const workbook = XLSX.readFile(req.file.path);
+
+
+const sheet = workbook.Sheets[
+workbook.SheetNames[0]
+];
+
+
+const data = XLSX.utils.sheet_to_json(sheet);
+
+
+
+await Record.insertMany(data);
+
+
+
+res.json({
+
+message:"Excel imported successfully",
+
+total:data.length
+
+});
+
+
+}catch(error){
+
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+
+}
+
+
+});
 
 app.listen(PORT,()=>{
 
