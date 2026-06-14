@@ -353,7 +353,65 @@ Delete
 }
 
 
+async function editRecord(id){
 
+
+const name =
+prompt("New Name");
+
+
+const sponsor =
+prompt("New Sponsor");
+
+
+const code =
+prompt("New Code");
+
+
+const gen =
+prompt("New GEN");
+
+
+const pin =
+prompt("New PIN");
+
+
+
+await fetch(
+`${API}/update-record/${id}`,
+{
+
+method:"PUT",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify({
+
+name,
+sponsor,
+code,
+gen,
+pin
+
+})
+
+}
+
+);
+
+
+
+alert("Updated");
+
+
+loadData();
+
+
+}
 
 
 function deleteRecord(id){

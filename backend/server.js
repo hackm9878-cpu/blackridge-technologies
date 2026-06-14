@@ -1,11 +1,11 @@
 require("dotenv").config();
 
-const multer = require("multer");
-const XLSX = require("xlsx");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
+const multer = require("multer");
+const XLSX = require("xlsx");
 
 const Record = require("./models/Record");
 const Admin = require("./models/Admin");
@@ -26,9 +26,11 @@ app.use(express.urlencoded({
     extended:true
 }));
 
+
 const upload = multer({
     dest:"uploads/"
 });
+
 
 // ======================
 // MONGODB
@@ -54,11 +56,9 @@ console.log(err);
 // FRONTEND
 // ======================
 
-app.use(
-express.static(
+app.use(express.static(
 path.join(__dirname,"frontend")
-)
-);
+));
 
 
 app.get("/",(req,res)=>{
@@ -75,14 +75,11 @@ __dirname,
 
 
 
-
 // ======================
 // CREATE ADMIN
 // ======================
 
 app.get("/create-admin",async(req,res)=>{
-
-try{
 
 
 const exists =
@@ -100,12 +97,10 @@ message:"Admin already exists"
 }
 
 
-
 const admin =
 new Admin({
 
 username:"admin",
-
 password:"admin123"
 
 });
@@ -114,27 +109,12 @@ password:"admin123"
 await admin.save();
 
 
-
 res.json({
-
 message:"Admin created"
-
 });
 
 
-}catch(error){
-
-res.status(500).json({
-
-message:error.message
-
 });
-
-}
-
-
-});
-
 
 
 
@@ -149,18 +129,12 @@ app.post("/login",async(req,res)=>{
 try{
 
 
-const {
-username,
-password
-}=req.body;
-
-
-
 const admin =
 await Admin.findOne({
-username
-});
 
+username:req.body.username
+
+});
 
 
 if(!admin){
@@ -175,8 +149,7 @@ message:"Admin not found"
 
 
 
-if(admin.password !== password){
-
+if(admin.password !== req.body.password){
 
 return res.status(400).json({
 
@@ -184,9 +157,7 @@ message:"Wrong password"
 
 });
 
-
 }
-
 
 
 res.json({
@@ -201,13 +172,16 @@ admin
 
 }catch(error){
 
+
 res.status(500).json({
 
 message:error.message
 
 });
 
+
 }
+
 
 
 });
@@ -227,32 +201,11 @@ app.post("/add-record",async(req,res)=>{
 try{
 
 
-const {
-name,
-sponsor,
-code,
-gen,
-pin
-
-}=req.body;
-
-
-
 const record =
-new Record({
-
-name,
-sponsor,
-code,
-gen,
-pin
-
-});
-
+new Record(req.body);
 
 
 await record.save();
-
 
 
 res.json({
@@ -262,7 +215,6 @@ message:"Record Added"
 });
 
 
-
 }catch(error){
 
 
@@ -281,45 +233,25 @@ message:error.message
 
 
 
-
 // ======================
-// GET RECORDS
+// GET DATA
 // ======================
 
 
 app.get("/records",async(req,res)=>{
 
 
-try{
-
-
-const records =
+const data =
 await Record.find()
 .sort({
 createdAt:1
 });
 
 
-
-res.json(records);
-
-
-
-}catch(error){
-
-
-res.status(500).json({
-
-message:error.message
-
-});
-
-
-}
+res.json(data);
 
 
 });
-
 
 
 
@@ -332,11 +264,8 @@ message:error.message
 app.get("/search",async(req,res)=>{
 
 
-try{
-
-
-const q=req.query.q;
-
+const q =
+req.query.q;
 
 
 const data =
@@ -344,34 +273,15 @@ await Record.find({
 
 $or:[
 
-{name:{
-$regex:q,
-$options:"i"
-}},
+{name:{$regex:q,$options:"i"}},
 
+{sponsor:{$regex:q,$options:"i"}},
 
-{sponsor:{
-$regex:q,
-$options:"i"
-}},
+{code:{$regex:q,$options:"i"}},
 
+{gen:{$regex:q,$options:"i"}},
 
-{code:{
-$regex:q,
-$options:"i"
-}},
-
-
-{gen:{
-$regex:q,
-$options:"i"
-}},
-
-
-{pin:{
-$regex:q,
-$options:"i"
-}}
+{pin:{$regex:q,$options:"i"}}
 
 
 ]
@@ -380,26 +290,18 @@ $options:"i"
 });
 
 
-
 res.json(data);
 
 
-
-}catch(error){
-
-
-res.status(500).json({
-
-message:error.message
-
 });
 
 
-}
 
 
-});
 
+// ======================
+// EDIT UPDATE
+// ======================
 
 
 app.put("/update-record/:id",async(req,res)=>{
@@ -409,25 +311,30 @@ try{
 
 
 await Record.findByIdAndUpdate(
+
 req.params.id,
+
 req.body
+
 );
 
 
 res.json({
 
-message:"Updated"
+message:"Updated successfully"
 
 });
 
 
 }catch(error){
 
+
 res.status(500).json({
 
 message:error.message
 
 });
+
 
 }
 
@@ -438,10 +345,13 @@ message:error.message
 
 
 
+
+// ======================
+// DELETE
+// ======================
+
+
 app.delete("/delete-record/:id",async(req,res)=>{
-
-
-try{
 
 
 await Record.findByIdAndDelete(
@@ -456,28 +366,19 @@ message:"Deleted"
 });
 
 
-}catch(error){
-
-
-res.status(500).json({
-
-message:error.message
-
 });
 
 
-}
 
 
-});
+
 
 // ======================
-// CLEAR ALL RECORDS
+// CLEAR ALL
 // ======================
 
-app.delete("/clear-records", async(req,res)=>{
 
-try{
+app.delete("/clear-records",async(req,res)=>{
 
 
 await Record.deleteMany({});
@@ -490,36 +391,20 @@ message:"All data cleared"
 });
 
 
-}catch(error){
-
-
-res.status(500).json({
-
-message:error.message
-
 });
 
 
-}
 
-});
+
+
+
 
 // ======================
 // CHANGE PASSWORD
 // ======================
 
 
-app.put("/change-password/:id",
-async(req,res)=>{
-
-
-try{
-
-
-const {
-password
-}=req.body;
-
+app.put("/change-password/:id",async(req,res)=>{
 
 
 await Admin.findByIdAndUpdate(
@@ -528,65 +413,41 @@ req.params.id,
 
 {
 
-password
+password:req.body.password
 
 }
 
 );
 
 
-
 res.json({
 
-message:"Password changed successfully"
+message:"Password changed"
+
+});
+
 
 });
 
 
 
-}catch(error){
 
 
-res.status(500).json({
-
-message:error.message
-
-});
-
-
-}
-
-
-});
-
-// ======================
-// SERVER
-// ======================
-
-
-const PORT =
-process.env.PORT || 5000;
 
 
 // ======================
-// UPLOAD EXCEL
+// EXCEL UPLOAD
 // ======================
 
-app.post("/upload-excel", upload.single("file"), async(req,res)=>{
+
+app.post(
+"/upload-excel",
+upload.single("file"),
+
+async(req,res)=>{
+
 
 try{
-
-
-if(!req.file){
-
-return res.status(400).json({
-
-message:"No Excel file selected"
-
-});
-
-}
-
 
 
 const workbook =
@@ -604,30 +465,23 @@ XLSX.utils.sheet_to_json(sheet);
 
 
 
+
 for(const row of rows){
 
 
 await Record.create({
 
-name:
-row.Name || "",
+name:row.Name || "",
 
+code:row.Code || "",
 
-code:
-row.Code || "",
-
-
-pin:
-row.Pin || "",
-
+pin:row.Pin || "",
 
 sponsor:
 row["Suponsor ID"] || "",
 
-
 gen:
 row.GEN || ""
-
 
 });
 
@@ -638,18 +492,15 @@ row.GEN || ""
 
 res.json({
 
-message:"Excel uploaded successfully",
+message:"Excel uploaded",
 
-total: rows.length
+total:rows.length
 
 });
 
 
 
 }catch(error){
-
-
-console.log(error);
 
 
 res.status(500).json({
@@ -660,6 +511,33 @@ message:error.message
 
 
 }
+
+
+
+});
+
+
+
+
+
+
+// ======================
+// SERVER START
+// ======================
+
+
+const PORT =
+process.env.PORT || 5000;
+
+
+app.listen(PORT,"0.0.0.0",()=>{
+
+
+console.log(
+
+`Server running on port ${PORT}`
+
+);
 
 
 });
