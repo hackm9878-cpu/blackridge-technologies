@@ -568,17 +568,35 @@ const PORT =
 process.env.PORT || 5000;
 
 
+// ======================
+// UPLOAD EXCEL
+// ======================
+
 app.post("/upload-excel", upload.single("file"), async(req,res)=>{
 
 try{
+
+
+if(!req.file){
+
+return res.status(400).json({
+
+message:"No Excel file selected"
+
+});
+
+}
+
 
 
 const workbook =
 XLSX.readFile(req.file.path);
 
 
+
 const sheet =
 workbook.Sheets[workbook.SheetNames[0]];
+
 
 
 const rows =
@@ -586,10 +604,10 @@ XLSX.utils.sheet_to_json(sheet);
 
 
 
-for(let row of rows){
+for(const row of rows){
 
 
-const record = new Record({
+await Record.create({
 
 name:
 row.Name || "",
@@ -604,9 +622,7 @@ row.Pin || "",
 
 
 sponsor:
-row["Suponsor ID"] ||
-row["Sponsor ID"] ||
-"",
+row["Suponsor ID"] || "",
 
 
 gen:
@@ -614,9 +630,6 @@ row.GEN || ""
 
 
 });
-
-
-await record.save();
 
 
 }
@@ -627,9 +640,10 @@ res.json({
 
 message:"Excel uploaded successfully",
 
-total:rows.length
+total: rows.length
 
 });
+
 
 
 }catch(error){
@@ -646,16 +660,6 @@ message:error.message
 
 
 }
-
-
-});
-
-app.listen(PORT,()=>{
-
-
-console.log(
-`Server running on ${PORT}`
-);
 
 
 });
