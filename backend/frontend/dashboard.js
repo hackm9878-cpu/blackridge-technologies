@@ -11,6 +11,47 @@ window.location.href="login.html";
 
 }
 
+async function clearAllData(){
+
+
+const confirmDelete =
+confirm(
+"Are you sure you want to delete ALL data?"
+);
+
+
+
+if(!confirmDelete) return;
+
+
+
+const res =
+await fetch(
+`${API}/clear-records`,
+{
+
+method:"DELETE"
+
+}
+
+);
+
+
+
+const data =
+await res.json();
+
+
+
+alert(data.message);
+
+
+
+loadData();
+
+
+}
+
 // ======================
 // CHANGE PASSWORD
 // ======================

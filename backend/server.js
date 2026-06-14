@@ -472,6 +472,39 @@ message:error.message
 });
 
 // ======================
+// CLEAR ALL RECORDS
+// ======================
+
+app.delete("/clear-records", async(req,res)=>{
+
+try{
+
+
+await Record.deleteMany({});
+
+
+res.json({
+
+message:"All data cleared"
+
+});
+
+
+}catch(error){
+
+
+res.status(500).json({
+
+message:error.message
+
+});
+
+
+}
+
+});
+
+// ======================
 // CHANGE PASSWORD
 // ======================
 
